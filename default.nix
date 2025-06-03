@@ -15,6 +15,21 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  hardware.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
+
+  security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -49,34 +64,60 @@
     variant = "";
   };
 
+  programs.regreet.enable = false;
+  services.greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+          user = "ziad";
+        };
+      };
+    };
+
   services.gnome.gnome-keyring.enable = true;
-  programs.sway.enable = true;
+  # programs.sway.enable = true;
   security.polkit.enable = true;
+  programs.dconf.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ziad = {
     isNormalUser = true;
     description = "ziad";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "video" ];
     packages = with pkgs; [];
   };
-
+  programs.light.enable = true;
   home-manager.users.ziad = ./home-manager.nix;
-  
+  programs.uwsm.enable = true;
+  programs.uwsm.waylandCompositors = {
+  sway = {
+    prettyName = "Sway";
+    comment = "Sway compositor managed by UWSM";
+    binPath = "${pkgs.sway}/bin/sway";
+    };
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  programs.fish.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-    helix
-    vim
-    neovim
-    git
-    firefox
+  # swayfx
+  pavucontrol
+  xfce.thunar
+  xfce.thunar-volman
   ];
+
+  fonts.packages = with pkgs;[
+    cascadia-code
+    fira-code
+    ];
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
