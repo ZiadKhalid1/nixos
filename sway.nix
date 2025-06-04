@@ -21,14 +21,24 @@
     '';
     enable = true;
     systemd.enable = true;
-    extraConfig = "# Brightness
+    extraConfig = ''
+    # Brightness
     bindsym XF86MonBrightnessDown exec light -U 10
     bindsym XF86MonBrightnessUp exec light -A 10
 
     # Volume
     bindsym XF86AudioRaiseVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ +5%'
     bindsym XF86AudioLowerVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ -5%'
-    bindsym XF86AudioMute exec '${pactl} set-sink-mute @DEFAULT_SINK@ toggle'";
+    bindsym XF86AudioMute exec '${pactl} set-sink-mute @DEFAULT_SINK@ toggle'
+    workspace_auto_back_and_forth yes
+    bindsym Alt+Tab workspace back_and_forth
+    input type:touchpad {
+        tap enabled
+        scroll_method two_finger edge
+        drag enabled
+        natural_scroll enabled
+        dwt enabled
+    }'';
     wrapperFeatures.gtk = true;
     # package = pkgs.swayfx;
     config = rec {
@@ -83,7 +93,7 @@
        	{ command = "${pkgs.wl-clipboard}/bin/wl-paste --watch cliphist store"; }
         { command = " systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP &";}
         { command = " dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";}
-        { command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"}"; always = true; }
+        { command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"} -m fit"; always = true; }
       ];
     };
   };

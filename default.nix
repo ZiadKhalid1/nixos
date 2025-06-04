@@ -114,6 +114,8 @@ boot.supportedFilesystems = [ "ntfs" ];
   udiskie
   ntfs3g
   file-roller
+  sway-audio-idle-inhibit
+  brightnessctl
   ];
 
   programs.xfconf.enable = true;
@@ -131,7 +133,8 @@ boot.supportedFilesystems = [ "ntfs" ];
 
   fonts.packages = with pkgs;[
     cascadia-code
-    fira-code
+    font-awesome
+    fira-code-nerdfont
     ];
 
   xdg.portal = {
