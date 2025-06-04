@@ -9,6 +9,16 @@
     pactl = lib.getExe' pkgs.pulseaudio "pactl";
   in
   {
+    extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+       # needs qt5.qtwayland in systemPackages
+       export QT_QPA_PLATFORM=wayland
+       export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+       # Fix for some Java AWT applications (e.g. Android Studio),
+       # use this if they aren't displayed properly:
+       export _JAVA_AWT_WM_NONREPARENTING=1
+      export MOZ_ENABLE_WAYLAND=1
+    '';
     enable = true;
     systemd.enable = true;
     extraConfig = "# Brightness
@@ -71,7 +81,9 @@
       startup = [
        	{ command = "${pkgs.autotiling}/bin/autotiling"; always = true; }
        	{ command = "${pkgs.wl-clipboard}/bin/wl-paste --watch cliphist store"; }
-        { command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://upload.wikimedia.org/wikipedia/commons/0/07/Sway_Wallpaper_Blue_1920x1080.png"}"; always = true; }
+        { command = " systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP &";}
+        { command = " dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";}
+        { command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"}"; always = true; }
       ];
     };
   };

@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz"}/nixos"
     ];
+boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -74,12 +75,10 @@
         };
       };
     };
-
+  services.dbus.implementation = "broker";
   services.gnome.gnome-keyring.enable = true;
-  # programs.sway.enable = true;
   security.polkit.enable = true;
   programs.dconf.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ziad = {
     isNormalUser = true;
@@ -109,16 +108,46 @@
   #  wget
   # swayfx
   pavucontrol
-  xfce.thunar
-  xfce.thunar-volman
+  gtklock
+  gtklock-powerbar-module
+  gtklock-playerctl-module
+  udiskie
+  ntfs3g
+  file-roller
   ];
+
+  programs.xfconf.enable = true;
+  programs.thunar ={
+    enable = true;
+    plugins = with pkgs.xfce; [
+    thunar-archive-plugin
+    thunar-volman
+    ];
+  };
+  services.gvfs.enable = true; # Mount, trash, and other functionalities
+  services.tumbler.enable = true; # Thumbnail support for images
+
+
 
   fonts.packages = with pkgs;[
     cascadia-code
     fira-code
     ];
 
+  xdg.portal = {
+	enable = true;
+	wlr.enable = true;
+	extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
+	config = {
+		common = {
+		default = [ "gtk" ];
+		"org.freedesktop.impl.portal.Screencast" = [ "wlr" ];
+		"org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+		};
+
+  	  };
+  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

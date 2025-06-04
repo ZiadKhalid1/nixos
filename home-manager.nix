@@ -58,8 +58,9 @@
     catppuccin = {
   	  flavor = "mocha";
   	  enable = true;
+     gtk.enable = true;
     };
-
+    gtk.enable = true;
     programs.git = {
         enable = true;
         delta.enable = true;
