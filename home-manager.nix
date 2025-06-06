@@ -24,21 +24,39 @@
   ];
     programs = {
       firefox.enable = true;
-      fish.enable = true;
       helix.enable = true;
       vim.enable = true;
       neovim.enable = true;
     };
 
-    programs.bash = {
-      initExtra = ''
-          if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
-          then
-            shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-            exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+    programs.fish = {
+        enable = true;
+        interactiveShellInit = ''
+          set fish_greeting # Disable greeting
+        '';
+        plugins = [
+          # Enable a plugin (here grc for colorized command output) from nixpkgs
+          { name = "grc"; src = pkgs.fishPlugins.grc.src; }
+          { name = "done"; src = pkgs.fishPlugins.done.src;}
+          { name = "fzf-fish"; src = pkgs.fishPlugins.fzf-fish.src;}
+          { name = "hydro"; src = pkgs.fishPlugins.hydro.src;}
+          { name = "forgit"; src = pkgs.fishPlugins.forgit.src;}
+        ];
+      };
+      programs.bash = {
+        enable = true;
+        initExtra = ''
+          if [[ "$(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm)" != "fish" && -z "$BASH_EXECUTION_STRING" ]]; then
+            if shopt -q login_shell; then
+              LOGIN_OPTION="--login"
+            else
+              LOGIN_OPTION=""
+            fi
+            exec fish $LOGIN_OPTION
           fi
         '';
       };
+
 
     programs.foot = {
       enable = true;
@@ -67,6 +85,5 @@
         userEmail = "ziadk1433@gmail.com";
         userName = "Ziad Khaled";
     };
-
     home.stateVersion = "24.11";
 }

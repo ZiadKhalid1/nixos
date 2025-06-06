@@ -66,13 +66,18 @@ boot.supportedFilesystems = [ "ntfs" ];
   };
 
   programs.regreet.enable = false;
+  services.displayManager.defaultSession = "Sway (UWSM)";
   services.greetd = {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
-          user = "ziad";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session";
+          user = "greeter";
         };
+        #initial_session = {
+         # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";'uwsm start -S -F ${pkgs.swayfx}/bin/sway'
+        #  user = "ziad";
+        # };
       };
     };
   services.dbus.implementation = "broker";
@@ -93,14 +98,13 @@ boot.supportedFilesystems = [ "ntfs" ];
   sway = {
     prettyName = "Sway";
     comment = "Sway compositor managed by UWSM";
-    binPath = "${pkgs.sway}/bin/sway";
+    binPath = "${pkgs.swayfx}/bin/sway";
     };
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   programs.fish.enable = true;
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -108,14 +112,14 @@ boot.supportedFilesystems = [ "ntfs" ];
   #  wget
   # swayfx
   pavucontrol
-  gtklock
-  gtklock-powerbar-module
-  gtklock-playerctl-module
   udiskie
   ntfs3g
   file-roller
   sway-audio-idle-inhibit
   brightnessctl
+  gtk-session-lock
+  grc
+  fzf
   ];
 
   programs.xfconf.enable = true;
@@ -128,13 +132,14 @@ boot.supportedFilesystems = [ "ntfs" ];
   };
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
+  security.pam.services.gtklock = {};
 
 
 
   fonts.packages = with pkgs;[
     cascadia-code
     font-awesome
-    fira-code-nerdfont
+    fira-code
     ];
 
   xdg.portal = {

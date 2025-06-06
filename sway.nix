@@ -21,6 +21,7 @@
     '';
     enable = true;
     systemd.enable = true;
+    checkConfig = false;
     extraConfig = ''
     # Brightness
     bindsym XF86MonBrightnessDown exec light -U 10
@@ -38,7 +39,41 @@
         drag enabled
         natural_scroll enabled
         dwt enabled
-    }'';
+    }
+    # CORNER
+      corner_radius 10
+      smart_corner_radius enable
+    # SHADOWS
+      shadows on
+      shadows_on_csd on
+      shadow_blur_radius 10
+      layer_effects "waybar" {
+          blur enable;
+          blur_xray enable;
+          blur_ignore_transparent enable;
+          shadows enable;
+          corner_radius 20;
+      }
+    # DARKENING INACTIVE WINDOWS
+    default_dim_inactive 0.1
+    dim_inactive_colors.unfocused #000000FF
+    dim_inactive_colors.urgent #900000FF
+    # gaps
+    gaps inner 5
+    gaps outer 5
+    smart_gaps off
+
+    # DISABLING WINDOW TITLES
+    default_border pixel 1
+    default_floating_border none
+
+    #--- FRAME SIZE
+    for_window [tiling] border pixel 1
+    for_window [floating] border none
+
+    # DISABLING THE FRAME WHEN ONE WINDOW IS OPEN
+    smart_borders on
+    '';
     wrapperFeatures.gtk = true;
     # package = pkgs.swayfx;
     config = rec {
@@ -93,8 +128,19 @@
        	{ command = "${pkgs.wl-clipboard}/bin/wl-paste --watch cliphist store"; }
         { command = " systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP &";}
         { command = " dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";}
-        { command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"} -m fit"; always = true; }
+        { command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"} -m fill"; always = true; }
       ];
     };
+  };
+  home.packages = [
+     # pkgs.sway
+    (pkgs.writeShellScriptBin "lock" ''
+      ${lib.getExe pkgs.gtklock} -m ${pkgs.gtklock-powerbar-module}/lib/gtklock/powerbar-module.so -m ${pkgs.gtklock-playerctl-module}/lib/gtklock/playerctl-module.so "$@"
+    '')
+  ];
+  home.file.gtklock-config = {
+    enable = true;
+    source = ./gtklock-config;
+    target = ".config/gtklock/config.ini";
   };
 }
