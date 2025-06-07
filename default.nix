@@ -70,7 +70,7 @@
   #  xkb_layout "us,ara"
   #xkb_options "caps:shift_modifier,grp:ctrl_space_toggle"
   services.xserver.xkb = {
-    layout = "ara,us";
+    layout = "us,ara";
     model = "asus_laptop";
     variant = "";
     options = "caps:shift_modifier,grp:ctrl_space_toggle";
