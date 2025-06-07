@@ -5,18 +5,25 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz"}/nixos"
-    ];
-boot.supportedFilesystems = [ "ntfs" ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz"}/nixos"
+  ];
+  boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
+  programs = {
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      enableFishIntegration = true;
+    };
+  };
 
   security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
 
@@ -48,38 +55,38 @@ boot.supportedFilesystems = [ "ntfs" ];
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
-    LC_ADDRESS = "ar_EG.UTF-8";
-    LC_IDENTIFICATION = "ar_EG.UTF-8";
-    LC_MEASUREMENT = "ar_EG.UTF-8";
-    LC_MONETARY = "ar_EG.UTF-8";
-    LC_NAME = "ar_EG.UTF-8";
-    LC_NUMERIC = "ar_EG.UTF-8";
-    LC_PAPER = "ar_EG.UTF-8";
-    LC_TELEPHONE = "ar_EG.UTF-8";
-    LC_TIME = "ar_EG.UTF-8";
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
   };
 
   # Configure keymap in X11
+  #  xkb_layout "us,ara"
+  #xkb_options "caps:shift_modifier,grp:ctrl_space_toggle"
   services.xserver.xkb = {
-    layout = "us";
+    layout = "ara,us";
+    model = "asus_laptop";
     variant = "";
+    options = "caps:shift_modifier,grp:ctrl_space_toggle";
   };
 
   programs.regreet.enable = false;
   services.displayManager.defaultSession = "Sway (UWSM)";
   services.greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session";
-          user = "greeter";
-        };
-        #initial_session = {
-         # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";'uwsm start -S -F ${pkgs.swayfx}/bin/sway'
-        #  user = "ziad";
-        # };
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session";
+        user = "greeter";
       };
     };
+  };
   services.dbus.implementation = "broker";
   services.gnome.gnome-keyring.enable = true;
   security.polkit.enable = true;
@@ -88,17 +95,21 @@ boot.supportedFilesystems = [ "ntfs" ];
   users.users.ziad = {
     isNormalUser = true;
     description = "ziad";
-    extraGroups = [ "networkmanager" "wheel" "video" ];
-    packages = with pkgs; [];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "video"
+    ];
+    packages = with pkgs; [ ];
   };
   programs.light.enable = true;
   home-manager.users.ziad = ./home-manager.nix;
   programs.uwsm.enable = true;
   programs.uwsm.waylandCompositors = {
-  sway = {
-    prettyName = "Sway";
-    comment = "Sway compositor managed by UWSM";
-    binPath = "${pkgs.swayfx}/bin/sway";
+    sway = {
+      prettyName = "Sway";
+      comment = "Sway compositor managed by UWSM";
+      binPath = "${pkgs.swayfx}/bin/sway";
     };
   };
 
@@ -108,53 +119,53 @@ boot.supportedFilesystems = [ "ntfs" ];
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  # swayfx
-  pavucontrol
-  udiskie
-  ntfs3g
-  file-roller
-  sway-audio-idle-inhibit
-  brightnessctl
-  gtk-session-lock
-  grc
-  fzf
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
+    pavucontrol
+    ntfs3g
+    file-roller
+    sway-audio-idle-inhibit
+    brightnessctl
+    grc
+    fzf
+    telegram-desktop
+    libnotify
+    pomodoro-gtk
   ];
 
   programs.xfconf.enable = true;
-  programs.thunar ={
+  programs.thunar = {
     enable = true;
     plugins = with pkgs.xfce; [
-    thunar-archive-plugin
-    thunar-volman
+      thunar-archive-plugin
+      thunar-volman
     ];
   };
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
-  security.pam.services.gtklock = {};
+  security.pam.services.gtklock = { };
+  services.blueman.enable = true;
 
-
-
-  fonts.packages = with pkgs;[
+  fonts.packages = with pkgs; [
     cascadia-code
     font-awesome
     fira-code
-    ];
+    fira-mono
+  ];
 
   xdg.portal = {
-	enable = true;
-	wlr.enable = true;
-	extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
-	config = {
-		common = {
-		default = [ "gtk" ];
-		"org.freedesktop.impl.portal.Screencast" = [ "wlr" ];
-		"org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-		};
+    config = {
+      common = {
+        default = [ "gtk" ];
+        "org.freedesktop.impl.portal.Screencast" = [ "wlr" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+      };
 
-  	  };
+    };
   };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

@@ -10,10 +10,8 @@
         "sway/mode",
         "cpu",
         "memory",
-        "temperature",
         "disk#one",
-        "network",
-        "custom/pacman"],
+        "network"],
 
 
   "modules-center": ["custom/prayer"],
@@ -24,7 +22,6 @@
         "idle_inhibitor",
         "backlight",
         "sway/language",
-        "custom/pomo",
         "battery",
         "pulseaudio",
         "clock"],
@@ -76,17 +73,6 @@
     "on-click": "foot btm"
      },
 
-  "temperature": {
-        "thermal-zone": 3,
-        "interval" : 1,
-        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
-        "critical-threshold": 80,
-
-        "format": "{icon}&#8239;{temperatureC}°C",
-        "format-icons": ["", "", ""],
-        "on-click": "foot -a 'flying-foot' --window-size-chars 82x25 watch sensors",
-        "escape": true
-    },
      "disk#one": {
 		"states": {
 			"good": 0,
@@ -113,22 +99,9 @@
     "icon-size": 15
   },
 
-  "custom/pacman": {
-	"format": "{}  ",
-	"interval": 3600,
-	"exec": "checkupdates | wc -l",
-	"exec-if": "exit 0",
-	"on-click": "foot -a 'flying-foot' --window-size-chars 82x25 paru -Syu ; pkill -SIGRTMIN+8 waybar",
-	"signal": 8
-  },
-
   "clock": {
-
-
-
-
   "format": "  {:%I:%M}",
-	"format-alt": "{:%A, %B %d, %Y (%R)}  ",
+	"format-alt": " {:%A, %B %d, %Y (%R)}",
 	"tooltip-format": "<span size='9pt' font='Fira Mono'>{calendar}</span>",
 	"calendar": {
 		"mode"          : "year",
@@ -235,20 +208,13 @@
       "on-click": "pavucontrol"
     },
 
-    "custom/prayer": {
-      "exec": " prayer-times ",
-      "interval": 30,
-      "tooltip": true ,
-      "tooltip-format": "{}",
-      "format": "🕌 {}"
-    },
-    "custom/weather": {
-       "format": "{}°",
-       "tooltip": true,
-       "interval": 3600,
-       "exec": "wttrbar --location Asyut",
-       "return-type": "json"
-},
+    // "custom/prayer": {
+    //   "exec": " prayer-times ",
+    //   "interval": 30,
+    //   "tooltip": true ,
+    //   "tooltip-format": "{}",
+    //   "format": "🕌 {}"
+    // },
 
  "keyboard-state": {
 	"numlock": true,
@@ -273,15 +239,15 @@
 
 },
 
-"custom/pomo": {
-    "format": "   {}",
-    "exec": "pomodoro-cli status --format json --time-format digital",
-    "return-type": "json",
-    "on-click": "pomodoro-cli start --add 5m --notify",
-    "on-click-middle": "pomodoro-cli pause",
-    "on-click-right": "pomodoro-cli stop",
-    "interval": 1
-}
+//"custom/pomo": {
+//    "format": "   {}",
+//    "exec": "pomodoro-cli status --format json --time-format digital",
+//    "return-type": "json",
+//    "on-click": "pomodoro-cli start --add 5m --notify",
+//    "on-click-middle": "pomodoro-cli pause",
+//    "on-click-right": "pomodoro-cli stop",
+    //"interval": 1
+    //}
 
 
 

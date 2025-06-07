@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   home.file.waybar-conf = {
     enable = true;
     source = ./waybar-config.json;
