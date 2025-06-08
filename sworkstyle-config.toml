@@ -1,0 +1,71 @@
+# Config for workstyle
+#
+# Format:
+# "pattern" = "icon"
+#
+# The pattern will be used to match against the application name, class_id or WM_CLASS.
+# The icon will be used to represent that application.
+#
+# Note if multiple patterns are present in the same application name,
+# precedence is given in order of apparition in this file.
+# "github" = ""
+
+fallback_icon = "⊠"
+deduplicate_icons = false
+separator = " "
+
+[matching]
+"blueman-manager" = ""
+"anki" = "A"
+"obsidian" = "🪨"
+"packetTracer" = "🖧"
+"dev.zed.Zed" = ""
+"teams-for-linux" = ""
+"alacritty" = ""
+"foot" = ""
+"rust" = ""
+"google" = ""
+"youtube" = ""
+"private browsing" = ""
+"firefox" = ""
+"cachy-browser" = ""
+"chromium" = ""
+"thorium-browser" = ""
+"thunar" = ""
+"libreoffice calc" = ""
+"libreoffice writer" = ""
+"libreoffice" = ""
+"nvim" = ""
+"imv" = ""
+"gthumb" = ""
+"menu" = ""
+"calculator" = ""
+"transmission" = ""
+"videostream" = ""
+"mpv" = ""
+"music" = ""
+"disk usage" = ""
+".pdf" = ""
+"evince" = ""
+"virt-manager" = ""
+"audacity" = ""
+"io.github.whoozle.android-file-transfer" = ""
+"org.telegram.desktop" = ""
+"nemo" = "📁"
+"vscodium" = ""
+"org.manjaro.pamac.manager" = ""
+"com.rtosta.zapzap" = ""
+"com.ktechpit.whatsie" = ""
+"wasistlos" = ""
+"io.github.seadve.Kooha" = "⎚"
+"jetbrains-clion" = ""
+"freetube" = ""
+"quran-companion" = ""
+"com.github.xournalpp.xournalpp" = ""
+"PacketTracer" = "🖧"
+'Bitwarden' = ''
+'Thunderbird' = ''
+'thunderbird' = ''
+'Slack' = ''
+'vlc' = ''
+'discord' = ''

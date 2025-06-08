@@ -82,6 +82,11 @@
 
         # DISABLING THE FRAME WHEN ONE WINDOW IS OPEN
         smart_borders on
+      focus_follows_mouse yes
+    # switch to workspace with urgent window automatically
+        for_window [urgent=latest] focus
+
+
       '';
       wrapperFeatures.gtk = true;
       # package = pkgs.swayfx;
@@ -91,6 +96,26 @@
         keybindings = lib.mkOptionDefault {
           "${modifier}+q" = "kill";
           "${modifier}+w" = "exec ${pkgs.firefox}/bin/firefox";
+          "${modifier}+e" = "exec ${pkgs.xfce.thunar}/bin/thunar";
+          "${modifier}+1" = "workspace number 1";
+          "${modifier}+2" = "workspace number 2";
+          "${modifier}+3" = "workspace number 3";
+          "${modifier}+4" = "workspace number 4";
+          "${modifier}+5" = "workspace number 5";
+          "${modifier}+6" = "workspace number 6";
+          "${modifier}+7" = "workspace number 7";
+          "${modifier}+8" = "workspace number 8";
+          "${modifier}+9" = "workspace number 9";
+          "${modifier}+Ctrl+1" = "move container to workspace number 1; workspace number 1";
+          "${modifier}+Ctrl+2" = "move container to workspace number 2; workspace number 2";
+          "${modifier}+Ctrl+3" = "move container to workspace number 3; workspace number 3";
+          "${modifier}+Ctrl+4" = "move container to workspace number 4; workspace number 4";
+          "${modifier}+Ctrl+5" = "move container to workspace number 5; workspace number 5";
+          "${modifier}+Ctrl+6" = "move container to workspace number 6; workspace number 6";
+          "${modifier}+Ctrl+7" = "move container to workspace number 7; workspace number 7";
+          "${modifier}+Ctrl+8" = "move container to workspace number 8; workspace number 8";
+          "${modifier}+Ctrl+9" = "move container to workspace number 9; workspace number 9";
+
         };
         bars = [ ];
         workspaceAutoBackAndForth = true;
@@ -148,6 +173,11 @@
             command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"} -m fill";
             always = true;
           }
+          {
+            command = "${pkgs.brightnessctl}/bin/brightnessctl set 45%";
+            always = true;
+          }
+          { command = "${pkgs.swayest-workstyle}/bin/sworkstyle &> /tmp/sworkstyle.log"; }
         ];
       };
     };
@@ -174,10 +204,9 @@
         event = "before-sleep";
         command = "${lib.getExe pkgs.gtklock}";
       }
-      #{ event = "lock"; command = "lock"; }
     ];
   };
-  services.network-manager-applet.enable = true;
+  # services.network-manager-applet.enable = true;
   services.blueman-applet.enable = true;
   home.packages = [
     # pkgs.sway
@@ -185,6 +214,12 @@
       ${lib.getExe pkgs.gtklock} -m ${pkgs.gtklock-powerbar-module}/lib/gtklock/powerbar-module.so -m ${pkgs.gtklock-playerctl-module}/lib/gtklock/playerctl-module.so "$@"
     '')
   ];
+
+  home.file.Sworkstyle = {
+    enable = true;
+    source = ./sworkstyle-config.toml;
+    target = ".config/sworkstyle/config.toml";
+  };
   home.file.gtklock-config = {
     enable = true;
     source = ./gtklock-config;
