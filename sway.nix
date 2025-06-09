@@ -14,19 +14,11 @@
       pactl = lib.getExe' pkgs.pulseaudio "pactl";
     in
     {
-      extraSessionCommands = ''
-        export SDL_VIDEODRIVER=wayland
-         # needs qt5.qtwayland in systemPackages
-         export QT_QPA_PLATFORM=wayland
-         export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-         # Fix for some Java AWT applications (e.g. Android Studio),
-         # use this if they aren't displayed properly:
-         export _JAVA_AWT_WM_NONREPARENTING=1
-        export MOZ_ENABLE_WAYLAND=1
-      '';
+
       enable = true;
       systemd.enable = true;
       checkConfig = false;
+      package = with pkgs; sway.override { sway-unwrapped = swayfx; };
       extraConfig = ''
         # Brightness
         bindsym XF86MonBrightnessDown exec light -U 10
@@ -88,6 +80,7 @@
 
 
       '';
+      systemd.xdgAutostart = true;
       wrapperFeatures.gtk = true;
       # package = pkgs.swayfx;
       config = rec {
@@ -215,6 +208,13 @@
     '')
   ];
 
+  xdg.configFile."uwsm/env-sway".text = "
+  export SDL_VIDEODRIVER=wayland
+  export QT_QPA_PLATFORM=wayland
+  export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+  export _JAVA_AWT_WM_NONREPARENTING=1
+  export MOZ_ENABLE_WAYLAND=1
+  ";
   home.file.Sworkstyle = {
     enable = true;
     source = ./sworkstyle-config.toml;

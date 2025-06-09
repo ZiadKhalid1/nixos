@@ -17,7 +17,7 @@
   };
   home.packages = with pkgs; [
     nil
-    
+
     clang-tools
     clang
     (pkgs.callPackage ./zed-editor-bin.nix { })
@@ -36,7 +36,13 @@
       rofi-bluetooth
       rofi-power-menu
     ];
+  };
 
+  programs.mpv = {
+    enable = true;
+    config = {
+        profile = [" gpu-hq"];
+    };
   };
   programs.fish = {
     enable = true;
@@ -113,6 +119,14 @@
     delta.enable = true;
     userEmail = "ziadk1433@gmail.com";
     userName = "Ziad Khaled";
+  };
+
+  xdg = {
+    enable = true;
+    userDirs = {
+      enable = true;
+      createDirectories = true;
+    };
   };
   home.stateVersion = "24.11";
 }

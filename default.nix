@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -87,7 +87,6 @@
       };
     };
   };
-  services.dbus.implementation = "broker";
   services.gnome.gnome-keyring.enable = true;
   security.polkit.enable = true;
   programs.dconf.enable = true;
@@ -129,8 +128,14 @@
     grc
     fzf
     telegram-desktop
-    libnotify
     pomodoro-gtk
+    vlc
+    unicode-character-database
+    kooha
+    grim # screenshot functionality
+    slurp # screenshot functionality
+    wl-clipboard
+    imv
   ];
 
   programs.xfconf.enable = true;
@@ -143,7 +148,7 @@
   };
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
-  security.pam.services.gtklock = { };
+
   services.blueman.enable = true;
 
   fonts.packages = with pkgs; [
@@ -167,6 +172,12 @@
 
     };
   };
+
+  security.pam.services.gtklock = { };
+  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.passwd.enableGnomeKeyring = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
