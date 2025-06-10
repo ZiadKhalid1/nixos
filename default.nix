@@ -136,6 +136,8 @@
     slurp # screenshot functionality
     wl-clipboard
     imv
+    obsidian
+    bottom
   ];
 
   programs.xfconf.enable = true;

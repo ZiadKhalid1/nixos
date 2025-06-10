@@ -171,6 +171,7 @@
             always = true;
           }
           { command = "${pkgs.swayest-workstyle}/bin/sworkstyle &> /tmp/sworkstyle.log"; }
+          { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";}
         ];
       };
     };

@@ -41,7 +41,7 @@
   programs.mpv = {
     enable = true;
     config = {
-        profile = [" gpu-hq"];
+      profile = [ " gpu-hq" ];
     };
   };
   programs.fish = {
@@ -128,5 +128,16 @@
       createDirectories = true;
     };
   };
+  # programs.zed-editor = {
+  #   enable = true;
+  #   extensions = [
+  #     "catppuccin"
+  #     "nix"
+  #   ];
+  #   settings = {
+  #     auto-update = false;
+  #     vim_mode = true;
+  #   };
+  # };
   home.stateVersion = "24.11";
 }
