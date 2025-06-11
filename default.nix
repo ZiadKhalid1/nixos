@@ -1,14 +1,17 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ pkgs, ... }:
-
+let
+  sources = import ./npins;
+  pkgs = import sources.nixpkgs { };
+  home-manager = import sources.home-manager {};
+  catppuccin = import sources.catppuccin { };
+in
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz"}/nixos"
+    <home-manager/nixos>
   ];
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -16,7 +19,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  hardware.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
+  services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
   programs = {
     direnv = {
       enable = true;
@@ -34,10 +37,10 @@
     pulse.enable = true;
     wireplumber.enable = true;
   };
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
+   hardware.bluetooth = {
+     enable = true;
+     powerOnBoot = true;
+   };
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -103,6 +106,7 @@
   };
   programs.light.enable = true;
   home-manager.users.ziad = ./home-manager.nix;
+  home-manager.extraSpecialArgs = { inherit catppuccin; };
   programs.uwsm.enable = true;
   programs.uwsm.waylandCompositors = {
     sway = {
@@ -136,8 +140,9 @@
     slurp # screenshot functionality
     wl-clipboard
     imv
-    obsidian
+    # obsidian
     bottom
+    (callPackage ./bs.nix { })
   ];
 
   programs.xfconf.enable = true;
@@ -160,6 +165,23 @@
     fira-mono
   ];
 
+   programs.gtklock = {
+     enable = true;
+     modules = with pkgs; [
+       gtklock-playerctl-module
+       gtklock-powerbar-module
+       gtklock-userinfo-module
+     ];
+     config = {
+       main = {
+         idle-hide = true;
+         idle-timeout = 10;
+         start-hidden = true;
+         time-format = "%I:%M:%S";
+       };
+     };
+   };
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;
@@ -175,10 +197,20 @@
     };
   };
 
-  security.pam.services.gtklock = { };
   security.pam.services.greetd.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
   security.pam.services.passwd.enableGnomeKeyring = true;
+
+  security.pam.loginLimits = [
+    { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
+  ];
+
+  nix.nixPath = [
+     "nixos=${sources.nixpkgs}"
+     "nixpkgs=${sources.nixpkgs}"
+     "home-manager=${sources.home-manager}"
+     "nixos-config=/home/ziad/nixos/default.nix"
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -205,6 +237,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
 }

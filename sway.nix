@@ -77,7 +77,27 @@
       focus_follows_mouse yes
     # switch to workspace with urgent window automatically
         for_window [urgent=latest] focus
+        #hide_edge_borders vertical
+        #mouse_warping none
+        # set $ii inhibit_idle focus
+        # set $game inhibit_idle focus; floating enable; border none; fullscreen enable; shadows disable
+        # set $popup floating enable; border pixel 1; sticky enable; shadows enable
+        # set $float floating enable; border pixel 1; shadows enable
+        # set $video inhibit_idle fullscreen; border none; max_render_time off
+        # set $important inhibit_idle open; floating enable; border pixel 1
+        # set $max inhibit_idle visible; floating enable; sticky enable; border pixel 1
 
+         for_window [app_id="firefox" title="^Picture-in-Picture$"] sticky enable
+        #  	[app_id="galculator"] $popup
+             for_window [app_id="pavucontrol"] {
+                sticky enable
+                resize set width 50ppt height 50ppt
+                 move position 50ppt 0
+                 }
+        #    [app_id="org.telegram.desktop"] $float; blur off; shadows disable;
+        #    [app_id="teams-for-linux"] $float
+        #    [class="teams-for-linux"] $float
+        #    [instance="teams-for-linux"] $float
 
       '';
       systemd.xdgAutostart = true;
@@ -108,9 +128,26 @@
           "${modifier}+Ctrl+7" = "move container to workspace number 7; workspace number 7";
           "${modifier}+Ctrl+8" = "move container to workspace number 8; workspace number 8";
           "${modifier}+Ctrl+9" = "move container to workspace number 9; workspace number 9";
-
         };
         bars = [ ];
+        floating = {
+          criteria = [
+              {window_type="dialog"        ;}
+              {window_type="utility"       ;}
+              {window_type="toolbar"       ;}
+              {window_type="splash"        ;}
+              {window_type="menu"          ;}
+              {window_type="dropdown_menu" ;}
+              {window_type="popup_menu"    ;}
+              {window_type="tooltip"       ;}
+              {window_type="notification"  ;}
+              {title="(?:Open|Save) (?:File|Folder|As)";}
+              {app_id="^firefox$"; title="^Extension: .*Bitwarden.*Firefox$";}
+              {app_id="pavucontrol";}
+              {app_id="firefox"; title="^Picture-in-Picture$";}
+          ];
+
+        };
         workspaceAutoBackAndForth = true;
         menu = "rofi -show-icons -show drun";
         colors = {

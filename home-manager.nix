@@ -1,10 +1,12 @@
-{ pkgs, ... }:
-{
+{ pkgs, catppuccin, lib, ... }:
+let
+  sources = import ./npins;
+in
 
+{
   imports = [
     ./sway.nix
-
-    "${builtins.fetchTarball "https://github.com/catppuccin/nix/archive/main.tar.gz"}/modules/home-manager"
+    (sources.catppuccin + "/modules/home-manager")
   ];
   home.pointerCursor = {
     name = "Adwaita";
@@ -97,22 +99,22 @@
   };
   services.cliphist.enable = true;
   services.cliphist.allowImages = true;
-  services.cliphist.systemdTarget = "sway-session.target";
+  services.cliphist.systemdTargets = "sway-session.target";
   services.gnome-keyring = {
     enable = true;
   };
 
-  catppuccin = {
-    flavor = "mocha";
-    enable = true;
-    rofi.enable = true;
-    gtk = {
-      enable = true;
-      accent = "blue";
-      icon.enable = true;
-      icon.accent = "blue";
-    };
-  };
+   catppuccin = {
+     flavor = "mocha";
+     enable = true;
+     rofi.enable = true;
+     gtk = {
+       enable = true;
+       accent = "blue";
+       icon.enable = true;
+       icon.accent = "blue";
+     };
+   };
   gtk.enable = true;
   programs.git = {
     enable = true;
@@ -139,5 +141,5 @@
   #     vim_mode = true;
   #   };
   # };
-  home.stateVersion = "24.11";
+  home.stateVersion = "25.11";
 }

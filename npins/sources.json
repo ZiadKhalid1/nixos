@@ -1,0 +1,37 @@
+{
+  "pins": {
+    "catppuccin": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "catppuccin",
+        "repo": "nix"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "3a42cd79c647360ee8742659e42aeec0947dd3b4",
+      "url": "https://github.com/catppuccin/nix/archive/3a42cd79c647360ee8742659e42aeec0947dd3b4.tar.gz",
+      "hash": "1ricf3byrzg0a2szf6ym8497rb7m11ngzgx1shyfaxmm2mhi0q7w"
+    },
+    "home-manager": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "home-manager"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "427c96044f11a5da50faf6adaf38c9fa47e6d044",
+      "url": "https://github.com/nix-community/home-manager/archive/427c96044f11a5da50faf6adaf38c9fa47e6d044.tar.gz",
+      "hash": "0sk62jkv4vc961x4g5cwlcwpj5wf272avkjmjqxly0lvlvplbgsh"
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixpkgs-unstable",
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre812987.a12f3a996148/nixexprs.tar.xz",
+      "hash": "00bvlg4qmpwaj7cnwrgiv4s8f5hqwnizdbkvn76r5ima3d4zhqay"
+    }
+  },
+  "version": 5
+}
