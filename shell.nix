@@ -18,6 +18,5 @@ pkgs.mkShell {
     nixfmt-rfc-style
     (callPackage ./bs.nix { })
   ];
-  NIX_PATH =
-    "nixos=${sources.nixpkgs}:nixpkgs=${sources.nixpkgs}:home-manager=${sources.home-manager}:nixos-config=/home/ziad/nixos/default.nix";
+  NIX_PATH = "nixos=${sources.nixpkgs}:nixpkgs=${sources.nixpkgs}:home-manager=${sources.home-manager}:nixos-config=/home/ziad/nixos/default.nix";
 }

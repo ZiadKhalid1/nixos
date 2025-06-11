@@ -1,7 +1,7 @@
 * {
   /* `otf-font-awesome` is required to be installed for icons */
   color : @text;
-  font-family: FontAwesome, CascadiaCode;
+  font-family: FiraCodeNerd, CascadiaCode;
   font-size: 15px;
 }
 

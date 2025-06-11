@@ -3,21 +3,30 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 let
   sources = import ./npins;
-  pkgs = import sources.nixpkgs { };
-  home-manager = import sources.home-manager {};
-  catppuccin = import sources.catppuccin { };
+  pkgs = import sources.nixpkgs {
+    config = {
+      allowUnfree = true;
+    };
+  };
+  catppuccin = sources.catppuccin;
 in
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     <home-manager/nixos>
+    <nixos-hardware/asus/battery.nix>
   ];
   boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  services.keyd = {
+    enable = true;
+
+  };
 
   services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
   programs = {
@@ -37,11 +46,17 @@ in
     pulse.enable = true;
     wireplumber.enable = true;
   };
-   hardware.bluetooth = {
-     enable = true;
-     powerOnBoot = true;
-   };
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
   networking.hostName = "nixos"; # Define your hostname.
+
+  hardware.asus.battery = {
+    chargeUpto = 85; # Maximum level of charge for your battery, as a percentage.
+    enableChargeUptoScript = true; # Whether to add charge-upto to environment.systemPackages. `charge-upto 85` temporarily sets the charge limit to 85%.
+  };
+
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -116,14 +131,10 @@ in
     };
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
   programs.fish.enable = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     pavucontrol
     ntfs3g
     file-roller
@@ -140,8 +151,9 @@ in
     slurp # screenshot functionality
     wl-clipboard
     imv
-    # obsidian
+    obsidian
     bottom
+    xournalpp
     (callPackage ./bs.nix { })
   ];
 
@@ -163,24 +175,24 @@ in
     font-awesome
     fira-code
     fira-mono
+    nerd-fonts.fira-code
   ];
 
-   programs.gtklock = {
-     enable = true;
-     modules = with pkgs; [
-       gtklock-playerctl-module
-       gtklock-powerbar-module
-       gtklock-userinfo-module
-     ];
-     config = {
-       main = {
-         idle-hide = true;
-         idle-timeout = 10;
-         start-hidden = true;
-         time-format = "%I:%M:%S";
-       };
-     };
-   };
+  programs.gtklock = {
+    enable = true;
+    modules = with pkgs; [
+      gtklock-playerctl-module
+      gtklock-powerbar-module
+    ];
+    config = {
+      main = {
+        idle-hide = true;
+        idle-timeout = 10;
+        start-hidden = true;
+        time-format = "%I:%M:%S";
+      };
+    };
+  };
 
   xdg.portal = {
     enable = true;
@@ -202,16 +214,25 @@ in
   security.pam.services.passwd.enableGnomeKeyring = true;
 
   security.pam.loginLimits = [
-    { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
+    {
+      domain = "@users";
+      item = "rtprio";
+      type = "-";
+      value = 1;
+    }
   ];
 
   nix.nixPath = [
-     "nixos=${sources.nixpkgs}"
-     "nixpkgs=${sources.nixpkgs}"
-     "home-manager=${sources.home-manager}"
-     "nixos-config=/home/ziad/nixos/default.nix"
+    "nixos=${sources.nixpkgs}"
+    "nixpkgs=${sources.nixpkgs}"
+    "home-manager=${sources.home-manager}"
+    "nixos-hardware=${sources.nixos-hardware}"
+    "nixos-config=/home/ziad/nixos/default.nix"
   ];
-
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.hplipWithPlugin ];
+  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

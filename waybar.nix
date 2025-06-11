@@ -233,6 +233,6 @@
 
       };
     };
-    style = builtins.readFile ./waybar.css;
+    style = builtins.readFile ./dotfiles/waybar.css;
   };
 }

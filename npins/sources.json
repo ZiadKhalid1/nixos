@@ -26,6 +26,19 @@
       "url": "https://github.com/nix-community/home-manager/archive/427c96044f11a5da50faf6adaf38c9fa47e6d044.tar.gz",
       "hash": "0sk62jkv4vc961x4g5cwlcwpj5wf272avkjmjqxly0lvlvplbgsh"
     },
+    "nixos-hardware": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixos-hardware"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "4602f7e1d3f197b3cb540d5accf5669121629628",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/4602f7e1d3f197b3cb540d5accf5669121629628.tar.gz",
+      "hash": "1qq9gb0rxw43l2hhdnbf6c24r6051nhnqv7z72zxd79fg108m4av"
+    },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",

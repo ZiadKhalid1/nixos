@@ -1,12 +1,13 @@
-{ pkgs, catppuccin, lib, ... }:
-let
-  sources = import ./npins;
-in
-
+{
+  pkgs,
+  catppuccin,
+  lib,
+  ...
+}:
 {
   imports = [
     ./sway.nix
-    (sources.catppuccin + "/modules/home-manager")
+    "${catppuccin}/modules/home-manager"
   ];
   home.pointerCursor = {
     name = "Adwaita";
@@ -19,14 +20,12 @@ in
   };
   home.packages = with pkgs; [
     nil
-
     clang-tools
     clang
-    (pkgs.callPackage ./zed-editor-bin.nix { })
+    (pkgs.callPackage ./pkgs/zed-editor-bin.nix { })
   ];
   programs = {
     firefox.enable = true;
-    helix.enable = true;
     vim.enable = true;
     neovim.enable = true;
   };
@@ -104,17 +103,18 @@ in
     enable = true;
   };
 
-   catppuccin = {
-     flavor = "mocha";
-     enable = true;
-     rofi.enable = true;
-     gtk = {
-       enable = true;
-       accent = "blue";
-       icon.enable = true;
-       icon.accent = "blue";
-     };
-   };
+  catppuccin = {
+    flavor = "mocha";
+    enable = true;
+    rofi.enable = true;
+    swaync.font = "FiraCodeNerd";
+    gtk = {
+      enable = true;
+      accent = "blue";
+      icon.enable = true;
+      icon.accent = "blue";
+    };
+  };
   gtk.enable = true;
   programs.git = {
     enable = true;
@@ -130,6 +130,30 @@ in
       createDirectories = true;
     };
   };
+
+  programs.helix = {
+    enable = true;
+    settings = {
+      editor.cursor-shape = {
+        normal = "block";
+        insert = "bar";
+        select = "underline";
+      };
+    };
+    extraPackages = [
+      pkgs.nil
+      pkgs.nixd
+    ];
+    languages.language = [
+      {
+        name = "nix";
+        auto-format = true;
+        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+      }
+    ];
+
+  };
+
   # programs.zed-editor = {
   #   enable = true;
   #   extensions = [

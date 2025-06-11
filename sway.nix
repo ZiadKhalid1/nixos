@@ -20,84 +20,84 @@
       checkConfig = false;
       package = with pkgs; sway.override { sway-unwrapped = swayfx; };
       extraConfig = ''
-        # Brightness
-        bindsym XF86MonBrightnessDown exec light -U 10
-        bindsym XF86MonBrightnessUp exec light -A 10
+            # Brightness
+            bindsym XF86MonBrightnessDown exec light -U 10
+            bindsym XF86MonBrightnessUp exec light -A 10
 
-        # Volume
-        bindsym XF86AudioRaiseVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ +5%'
-        bindsym XF86AudioLowerVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ -5%'
-        bindsym XF86AudioMute exec '${pactl} set-sink-mute @DEFAULT_SINK@ toggle'
-        workspace_auto_back_and_forth yes
-        bindsym Alt+Tab workspace back_and_forth
-        input type:touchpad {
-            tap enabled
-            scroll_method two_finger edge
-            drag enabled
-            natural_scroll enabled
-            dwt enabled
-        }
-        input * {
-            xkb_layout "us,ara"
-            xkb_options "caps:shift_modifier,grp:ctrl_space_toggle"
-        }
-        # CORNER
-          corner_radius 10
-          smart_corner_radius enable
-        # SHADOWS
-          shadows on
-          shadows_on_csd on
-          shadow_blur_radius 10
-          layer_effects "waybar" {
-              blur enable;
-              blur_xray enable;
-              blur_ignore_transparent enable;
-              shadows enable;
-              corner_radius 20;
-          }
-        # DARKENING INACTIVE WINDOWS
-        default_dim_inactive 0.1
-        dim_inactive_colors.unfocused #000000FF
-        dim_inactive_colors.urgent #900000FF
-        # gaps
-        gaps inner 5
-        gaps outer 5
-        smart_gaps off
+            # Volume
+            bindsym XF86AudioRaiseVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ +5%'
+            bindsym XF86AudioLowerVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ -5%'
+            bindsym XF86AudioMute exec '${pactl} set-sink-mute @DEFAULT_SINK@ toggle'
+            workspace_auto_back_and_forth yes
+            bindsym Alt+Tab workspace back_and_forth
+            input type:touchpad {
+                tap enabled
+                scroll_method two_finger edge
+                drag enabled
+                natural_scroll enabled
+                dwt enabled
+            }
+            input * {
+                xkb_layout "us,ara"
+                xkb_options "caps:shift_modifier,grp:ctrl_space_toggle"
+            }
+            # CORNER
+              corner_radius 10
+              smart_corner_radius enable
+            # SHADOWS
+              shadows on
+              shadows_on_csd on
+              shadow_blur_radius 10
+              layer_effects "waybar" {
+                  blur enable;
+                  blur_xray enable;
+                  blur_ignore_transparent enable;
+                  shadows enable;
+                  corner_radius 20;
+              }
+            # DARKENING INACTIVE WINDOWS
+            default_dim_inactive 0.1
+            dim_inactive_colors.unfocused #000000FF
+            dim_inactive_colors.urgent #900000FF
+            # gaps
+            gaps inner 5
+            gaps outer 5
+            smart_gaps off
 
-        # DISABLING WINDOW TITLES
-        default_border pixel 1
-        default_floating_border none
+            # DISABLING WINDOW TITLES
+            default_border pixel 1
+            default_floating_border none
 
-        #--- FRAME SIZE
-        for_window [tiling] border pixel 1
-        for_window [floating] border none
+            #--- FRAME SIZE
+            for_window [tiling] border pixel 1
+            for_window [floating] border none
 
-        # DISABLING THE FRAME WHEN ONE WINDOW IS OPEN
-        smart_borders on
-      focus_follows_mouse yes
-    # switch to workspace with urgent window automatically
-        for_window [urgent=latest] focus
-        #hide_edge_borders vertical
-        #mouse_warping none
-        # set $ii inhibit_idle focus
-        # set $game inhibit_idle focus; floating enable; border none; fullscreen enable; shadows disable
-        # set $popup floating enable; border pixel 1; sticky enable; shadows enable
-        # set $float floating enable; border pixel 1; shadows enable
-        # set $video inhibit_idle fullscreen; border none; max_render_time off
-        # set $important inhibit_idle open; floating enable; border pixel 1
-        # set $max inhibit_idle visible; floating enable; sticky enable; border pixel 1
+            # DISABLING THE FRAME WHEN ONE WINDOW IS OPEN
+            smart_borders on
+          focus_follows_mouse yes
+        # switch to workspace with urgent window automatically
+            for_window [urgent=latest] focus
+            #hide_edge_borders vertical
+            #mouse_warping none
+            # set $ii inhibit_idle focus
+            # set $game inhibit_idle focus; floating enable; border none; fullscreen enable; shadows disable
+            # set $popup floating enable; border pixel 1; sticky enable; shadows enable
+            # set $float floating enable; border pixel 1; shadows enable
+            # set $video inhibit_idle fullscreen; border none; max_render_time off
+            # set $important inhibit_idle open; floating enable; border pixel 1
+            # set $max inhibit_idle visible; floating enable; sticky enable; border pixel 1
 
-         for_window [app_id="firefox" title="^Picture-in-Picture$"] sticky enable
-        #  	[app_id="galculator"] $popup
-             for_window [app_id="pavucontrol"] {
-                sticky enable
-                resize set width 50ppt height 50ppt
-                 move position 50ppt 0
-                 }
-        #    [app_id="org.telegram.desktop"] $float; blur off; shadows disable;
-        #    [app_id="teams-for-linux"] $float
-        #    [class="teams-for-linux"] $float
-        #    [instance="teams-for-linux"] $float
+             for_window [app_id="firefox" title="^Picture-in-Picture$"] sticky enable
+            #  	[app_id="galculator"] $popup
+                 for_window [app_id="pavucontrol"] {
+                    sticky enable
+                    resize set width 50ppt height 50ppt
+                     move position 50ppt 0
+                     }
+            #    [app_id="org.telegram.desktop"] $float; blur off; shadows disable;
+            #    [app_id="teams-for-linux"] $float
+            #    [class="teams-for-linux"] $float
+            #    [instance="teams-for-linux"] $float
 
       '';
       systemd.xdgAutostart = true;
@@ -132,19 +132,25 @@
         bars = [ ];
         floating = {
           criteria = [
-              {window_type="dialog"        ;}
-              {window_type="utility"       ;}
-              {window_type="toolbar"       ;}
-              {window_type="splash"        ;}
-              {window_type="menu"          ;}
-              {window_type="dropdown_menu" ;}
-              {window_type="popup_menu"    ;}
-              {window_type="tooltip"       ;}
-              {window_type="notification"  ;}
-              {title="(?:Open|Save) (?:File|Folder|As)";}
-              {app_id="^firefox$"; title="^Extension: .*Bitwarden.*Firefox$";}
-              {app_id="pavucontrol";}
-              {app_id="firefox"; title="^Picture-in-Picture$";}
+            { window_type = "dialog"; }
+            { window_type = "utility"; }
+            { window_type = "toolbar"; }
+            { window_type = "splash"; }
+            { window_type = "menu"; }
+            { window_type = "dropdown_menu"; }
+            { window_type = "popup_menu"; }
+            { window_type = "tooltip"; }
+            { window_type = "notification"; }
+            { title = "(?:Open|Save) (?:File|Folder|As)"; }
+            {
+              app_id = "^firefox$";
+              title = "^Extension: .*Bitwarden.*Firefox$";
+            }
+            { app_id = "pavucontrol"; }
+            {
+              app_id = "firefox";
+              title = "^Picture-in-Picture$";
+            }
           ];
 
         };
@@ -208,45 +214,44 @@
             always = true;
           }
           { command = "${pkgs.swayest-workstyle}/bin/sworkstyle &> /tmp/sworkstyle.log"; }
-          { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";}
+          { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
         ];
       };
     };
   services.swaync = {
     enable = true;
-    settings = builtins.fromJSON (builtins.readFile ./swaync-config.json);
+    settings = builtins.fromJSON (builtins.readFile ./dotfiles/swaync-config.json);
   };
 
   services.swayidle = {
     enable = true;
     extraArgs = [ ];
     timeouts = [
-      {
-        timeout = 300;
-        command = "${lib.getExe pkgs.gtklock} -S -T 10";
-      }
-      {
-        timeout = 900;
-        command = "${lib.getExe' pkgs.systemd "systemctl"} suspend";
-      }
+       {
+         timeout = 300;
+         command = "${lib.getExe pkgs.gtklock} -S -T 10";
+       }
+       {
+         timeout = 900;
+         command = "${lib.getExe' pkgs.systemd "systemctl"} suspend";
+       }
     ];
     events = [
-      {
-        event = "before-sleep";
-        command = "${lib.getExe pkgs.gtklock}";
-      }
+       {
+         event = "before-sleep";
+         command = "${lib.getExe pkgs.gtklock}";
+       }
     ];
   };
   # services.network-manager-applet.enable = true;
   services.blueman-applet.enable = true;
   home.packages = [
     # pkgs.sway
-    (pkgs.writeShellScriptBin "lock" ''
-      ${lib.getExe pkgs.gtklock} -m ${pkgs.gtklock-powerbar-module}/lib/gtklock/powerbar-module.so -m ${pkgs.gtklock-playerctl-module}/lib/gtklock/playerctl-module.so "$@"
-    '')
   ];
 
-  xdg.configFile."uwsm/env-sway".text = "
+
+  xdg.configFile."uwsm/env-sway".text =
+    "
   export SDL_VIDEODRIVER=wayland
   export QT_QPA_PLATFORM=wayland
   export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
@@ -255,12 +260,7 @@
   ";
   home.file.Sworkstyle = {
     enable = true;
-    source = ./sworkstyle-config.toml;
+    source = ./dotfiles/sworkstyle-config.toml;
     target = ".config/sworkstyle/config.toml";
-  };
-  home.file.gtklock-config = {
-    enable = true;
-    source = ./gtklock-config;
-    target = ".config/gtklock/config.ini";
   };
 }
