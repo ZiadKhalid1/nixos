@@ -22,7 +22,7 @@
     nil
     clang-tools
     clang
-    (pkgs.callPackage ./pkgs/zed-editor-bin.nix { })
+    #(pkgs.callPackage ./pkgs/zed-editor-bin.nix { })
   ];
   programs = {
     firefox.enable = true;
@@ -154,16 +154,31 @@
 
   };
 
-  # programs.zed-editor = {
-  #   enable = true;
-  #   extensions = [
-  #     "catppuccin"
-  #     "nix"
-  #   ];
-  #   settings = {
-  #     auto-update = false;
-  #     vim_mode = true;
-  #   };
-  # };
+  programs.zed-editor = {
+    enable = true;
+    package = pkgs.zed-editor-fhs;
+    extensions = [
+      "nix"
+      "toml"
+    ];
+    userSettings = {
+      auto-update = false;
+      vim_mode = true;
+      languages = {
+        Nix = {
+          formatter = {
+            external = {
+              command = "nixfmt";
+            };
+          };
+        };
+      };
+    };
+    extraPackages = [
+      pkgs.nil
+      pkgs.nixd
+      pkgs.nixfmt-rfc-style
+    ];
+  };
   home.stateVersion = "25.11";
 }

@@ -83,7 +83,12 @@
   # extension tooling without significant pain.
   fhs = {
     zed-editor,
-    additionalPkgs ? pkgs: [],
+    additionalPkgs ? pkgs: [
+      pkgs.nixd
+         pkgs.nil
+         pkgs.nixfmt-rfc-style
+         pkgs.vscode-langservers-extracted
+    ],
   }:
     buildFHSEnv {
       # also determines the name of the wrapped command

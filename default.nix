@@ -24,8 +24,7 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.keyd = {
-    enable = true;
-
+    enable = false;
   };
 
   services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
@@ -117,7 +116,7 @@ in
       "wheel"
       "video"
     ];
-    packages = with pkgs; [ ];
+    #packages = with pkgs; [ ];
   };
   programs.light.enable = true;
   home-manager.users.ziad = ./home-manager.nix;
@@ -189,7 +188,7 @@ in
         idle-hide = true;
         idle-timeout = 10;
         start-hidden = true;
-        time-format = "%I:%M:%S";
+        time-format = "%I:%M";
       };
     };
   };

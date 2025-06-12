@@ -94,6 +94,11 @@
                     resize set width 50ppt height 50ppt
                      move position 50ppt 0
                      }
+                for_window [app_id = "io.gitlab.idevecore.Pomodoro"] {
+                    floating enable
+                    sticky enable
+                    move position 50ppt 20ppt
+                }
             #    [app_id="org.telegram.desktop"] $float; blur off; shadows disable;
             #    [app_id="teams-for-linux"] $float
             #    [class="teams-for-linux"] $float
@@ -150,6 +155,10 @@
             {
               app_id = "firefox";
               title = "^Picture-in-Picture$";
+            }
+            {
+              app_id = "^thunar$";
+              title = "^Rename .*";
             }
           ];
 
@@ -227,28 +236,24 @@
     enable = true;
     extraArgs = [ ];
     timeouts = [
-       {
-         timeout = 300;
-         command = "${lib.getExe pkgs.gtklock} -S -T 10";
-       }
-       {
-         timeout = 900;
-         command = "${lib.getExe' pkgs.systemd "systemctl"} suspend";
-       }
+      {
+        timeout = 300;
+        command = "${lib.getExe pkgs.gtklock} -S -T 10";
+      }
+      {
+        timeout = 900;
+        command = "${lib.getExe' pkgs.systemd "systemctl"} suspend";
+      }
     ];
     events = [
-       {
-         event = "before-sleep";
-         command = "${lib.getExe pkgs.gtklock}";
-       }
+      {
+        event = "before-sleep";
+        command = "${lib.getExe pkgs.gtklock}";
+      }
     ];
   };
   # services.network-manager-applet.enable = true;
   services.blueman-applet.enable = true;
-  home.packages = [
-    # pkgs.sway
-  ];
-
 
   xdg.configFile."uwsm/env-sway".text =
     "

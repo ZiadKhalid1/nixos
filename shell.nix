@@ -4,7 +4,7 @@ let
   # Grab nixpkgs from there
   pkgs = import sources.nixpkgs { config.allowUnfree = true; };
   # Grab home-manager as well
-  home-manager = import sources.home-manager { };
+  # home-manager = import sources.home-manager { };
 in
 # Create a shell
 pkgs.mkShell {
@@ -13,9 +13,6 @@ pkgs.mkShell {
   ];
   packages = with pkgs; [
     npins
-    nixd
-    nil
-    nixfmt-rfc-style
     (callPackage ./bs.nix { })
   ];
   NIX_PATH = "nixos=${sources.nixpkgs}:nixpkgs=${sources.nixpkgs}:home-manager=${sources.home-manager}:nixos-config=/home/ziad/nixos/default.nix";
