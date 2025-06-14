@@ -115,6 +115,7 @@ in
       "networkmanager"
       "wheel"
       "video"
+      "kvm"
     ];
     #packages = with pkgs; [ ];
   };
@@ -153,9 +154,16 @@ in
     obsidian
     bottom
     xournalpp
+    uair
     (callPackage ./bs.nix { })
+    android-tools
+    heimdall-gui
+    gnome-boxes
+    tesseract
+    papers
   ];
-
+  # virtualisation.virtualbox.host.enableKvm = true;
+  virtualisation.libvirtd.enable = true;
   programs.xfconf.enable = true;
   programs.thunar = {
     enable = true;

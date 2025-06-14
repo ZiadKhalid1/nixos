@@ -23,6 +23,7 @@
     clang-tools
     clang
     #(pkgs.callPackage ./pkgs/zed-editor-bin.nix { })
+    zathura
   ];
   programs = {
     firefox.enable = true;
@@ -130,6 +131,8 @@
       createDirectories = true;
     };
   };
+
+  xdg.configFile."uair/uair.toml".text = builtins.readFile ./dotfiles/uair.toml;
 
   programs.helix = {
     enable = true;

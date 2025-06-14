@@ -66,7 +66,7 @@
             critical = 90;
           };
           interval = 1;
-          format = " {usage:2}%";
+          format = "󰻠 {usage:2}%";
           on-click = "foot btm";
         };
 
@@ -77,7 +77,7 @@
             critical = 85;
           };
           interval = 5;
-          format = " {}%";
+          format = "󰍛 {}%";
           on-click = "foot btm";
         };
 
@@ -93,7 +93,7 @@
         };
 
         "network" = {
-          format-wifi = " &#8239;({signalStrength}%)";
+          format-wifi = "󰖩 &#8239;({signalStrength}%)";
           format-ethernet = "&#8239;{ifname}: {ipaddr}/{cidr}";
           format-linked = "&#8239;{ifname} (No IP)";
           format-disconnected = "✈ &#8239;Disconnected";
