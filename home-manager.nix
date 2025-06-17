@@ -43,7 +43,6 @@
   programs.mpv = {
     enable = true;
     config = {
-      profile = [ " gpu-hq" ];
     };
   };
   programs.fish = {
@@ -132,7 +131,13 @@
     };
   };
 
-  xdg.configFile."uair/uair.toml".text = builtins.readFile ./dotfiles/uair.toml;
+  xdg.configFile."bilal/config.toml".text = ''
+    latitude = 27.180134
+    longitude = 31.189283
+    madhab = "Shafi"
+    method = "Egyptian"
+    time_format = "12H"
+  '';
 
   programs.helix = {
     enable = true;

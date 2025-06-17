@@ -5,5 +5,11 @@
   ...
 }:
 writeShellScriptBin "bs" ''
-  ${nixos-rebuild}/bin/nixos-rebuild switch -I nixpkgs=${sources.nixpkgs} -I home-manager=${sources.home-manager} -I nixos-config=${builtins.toString ./.} "$@"
+  ${nixos-rebuild}/bin/nixos-rebuild switch \
+    -I "nixos=${sources.nixpkgs}" \
+    -I "nixpkgs=${sources.nixpkgs}" \
+    -I "home-manager=${sources.home-manager}" \
+    -I "nixos-hardware=${sources.nixos-hardware}" \
+    -I "nixos-config=/home/ziad/nixos/default.nix" \
+    "$@"
 ''

@@ -3,12 +3,28 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 let
   sources = import ./npins;
+  next-prayer = pkgs.writeShellScriptBin "next-prayer" ''
+    ${pkgs.gnused}/bin/sed -E ':a;N;$!ba;s/\n/ /;s/^([[:alpha:]]+) \((.*)\) [[:alpha:]]+ \((.*)\)/\1: \2 (\3)/' <(${bilal}/bin/bilal next ; ${bilal}/bin/bilal current)
+  '';
+  bilal = pkgs.callPackage ./pkgs/bilal.nix { };
   pkgs = import sources.nixpkgs {
     config = {
       allowUnfree = true;
+      packageOverrides = pkgs: {
+        gtklock-dpms-module = pkgs.callPackage ./pkgs/gtklock-dpms-module.nix { };
+        gtklock-runshell-module = pkgs.callPackage ./pkgs/gtklock-runshell-module.nix { };
+        gtklock-powerbar-module = pkgs.gtklock-powerbar-module.overrideAttrs {
+          postPatch = ''
+            substituteInPlace source.c \
+              --replace-fail "systemctl" "${pkgs.systemd}/bin/systemctl"
+          '';
+        };
+        inherit next-prayer bilal;
+      };
     };
   };
   catppuccin = sources.catppuccin;
+
 in
 {
   imports = [
@@ -17,6 +33,7 @@ in
     <home-manager/nixos>
     <nixos-hardware/asus/battery.nix>
   ];
+
   boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader.
@@ -120,8 +137,10 @@ in
     #packages = with pkgs; [ ];
   };
   programs.light.enable = true;
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
   home-manager.users.ziad = ./home-manager.nix;
-  home-manager.extraSpecialArgs = { inherit catppuccin; };
+  home-manager.extraSpecialArgs = { inherit catppuccin next-prayer; };
   programs.uwsm.enable = true;
   programs.uwsm.waylandCompositors = {
     sway = {
@@ -155,12 +174,15 @@ in
     bottom
     xournalpp
     uair
-    (callPackage ./bs.nix { })
     android-tools
     heimdall-gui
     gnome-boxes
     tesseract
     papers
+    bilal
+    next-prayer
+    (callPackage ./pkgs/quran-companion.nix { })
+    # openpomodoro-cli
   ];
   # virtualisation.virtualbox.host.enableKvm = true;
   virtualisation.libvirtd.enable = true;
@@ -190,6 +212,8 @@ in
     modules = with pkgs; [
       gtklock-playerctl-module
       gtklock-powerbar-module
+      gtklock-runshell-module
+      # gtklock-dpms-module
     ];
     config = {
       main = {
@@ -198,7 +222,20 @@ in
         start-hidden = true;
         time-format = "%I:%M";
       };
+      runshell = {
+        command = "${pkgs.next-prayer}/bin/next-prayer";
+        refresh = 30;
+        # justify = "top";
+        runshell-position = "top-center";
+        margin-top = 100;
+      };
     };
+    style = ''
+      #runshell {
+      font-family: FiraMono;
+      text-shadow: 1px 1px 2px black;
+      }
+    '';
   };
 
   xdg.portal = {
@@ -240,6 +277,10 @@ in
     enable = true;
     drivers = [ pkgs.hplipWithPlugin ];
   };
+
+  # programs.nix-ld = {
+  #   enable = true;
+  # };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

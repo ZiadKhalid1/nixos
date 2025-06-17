@@ -1,39 +1,16 @@
-{
-  pkgs ? import <nixpkgs> { },
-}:
+{ rustPlatform, fetchFromGitHub }:
 
-let
-  rustNightly = pkgs.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default);
-in
-
-pkgs.stdenv.mkDerivation rec {
+rustPlatform.buildRustPackage rec {
   pname = "bilal";
-  version = "1.10.0";
+  version = "1.8.0";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "azzamsa";
     repo = "bilal";
     rev = "v${version}";
-    sha256 = "sha256-X5Z+DLFT3IoFzXlAwjMkzDkpT69YIJx+g8Dvw5F7HdE=";
+    sha256 = "sha256-O/2L1kMuN4eHXZLyawj2cX/O0IUS9E/DmStZsFHt7BI=";
   };
 
-  nativeBuildInputs = [
-    rustNightly
-    pkgs.cargo
-  ];
+  cargoHash = "sha256-rvt/yZ0RXzOcHDUu8z3J7SeZpm4F352TTvKVitj5XNE=";
 
-  buildPhase = ''
-    cargo build --release
-  '';
-
-  installPhase = ''
-    mkdir -p $out/bin
-    cp target/release/bilal $out/bin/
-  '';
-
-  meta = with pkgs.lib; {
-    description = "Command line prayer time notifier written in Rust";
-    homepage = "https://github.com/azzamsa/bilal";
-    license = licenses.mit;
-  };
 }

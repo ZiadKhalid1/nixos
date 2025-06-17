@@ -16,20 +16,13 @@ let
 in
 {
   imports = [ ./waybar.nix ];
-
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
     checkConfig = false;
     package = with pkgs; sway.override { sway-unwrapped = swayfx; };
     extraConfig = ''
-      bindsym XF86MonBrightnessDown exec light -U 10
-      bindsym XF86MonBrightnessUp exec light -A 10
-      bindsym XF86AudioRaiseVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ +5%'
-      bindsym XF86AudioLowerVolume exec '${pactl} set-sink-volume @DEFAULT_SINK@ -5%'
-      bindsym XF86AudioMute exec '${pactl} set-sink-mute @DEFAULT_SINK@ toggle'
       workspace_auto_back_and_forth yes
-      bindsym Alt+Tab workspace back_and_forth
       input type:touchpad {
         tap enabled
         scroll_method two_finger edge
@@ -79,7 +72,14 @@ in
     config = rec {
       modifier = "Mod4";
       defaultWorkspace = "workspace number 1";
+      bindkeysToCode = true;
       keybindings = lib.mkOptionDefault {
+        XF86MonBrightnessDown = "exec light -U 10";
+        XF86MonBrightnessUp = "exec light -A 10";
+        XF86AudioRaiseVolume = "exec '${pactl} set-sink-volume @DEFAULT_SINK@ +5%'";
+        XF86AudioLowerVolume = "exec '${pactl} set-sink-volume @DEFAULT_SINK@ -5%'";
+        XF86AudioMute = "exec '${pactl} set-sink-mute @DEFAULT_SINK@ toggle'";
+        "Alt+Tab" = "workspace back_and_forth";
         "${modifier}+q" = "kill";
         "${modifier}+w" = "exec ${pkgs.firefox}/bin/firefox";
         "${modifier}+e" = "exec ${pkgs.xfce.thunar}/bin/thunar";
@@ -215,7 +215,8 @@ in
     timeouts = [
       {
         timeout = 300;
-        command = "${lib.getExe pkgs.gtklock} -S -T 10";
+        command = "${lib.getExe pkgs.gtklock}";
+
       }
       {
         timeout = 900;

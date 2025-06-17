@@ -1,10 +1,5 @@
-{ ... }:
+{ next-prayer, ... }:
 {
-  # home.file.waybar-conf = {
-  #   enable = true;
-  #   source = ./waybar-config.json;
-  #   target = ".config/waybar/config";
-  # };
   programs.waybar = {
     enable = true;
     systemd.enable = true;
@@ -22,6 +17,7 @@
           "memory"
           "disk#one"
           "network"
+          "sway/language"
         ];
 
         modules-center = [ "custom/prayer" ];
@@ -32,7 +28,7 @@
           "custom/audio_idle_inhibitor"
           "idle_inhibitor"
           "backlight"
-          "sway/language"
+          "custom/pomodoro"
           "battery"
           "pulseaudio"
           "clock"
@@ -177,6 +173,21 @@
           escape = true;
         };
 
+        # "custom/pomodoro" = {
+        #   exec = "pomodoro status";
+        #   exec-if = "echo pomodoro";
+        #   format = "🍅 {}";
+        #   interval = 1;
+        #   on-click = "${pkgs.writeShellScript "pomodoro-start" ''
+        #     notify-send '🍅 Work started!'
+        #     pomodoro start && notify-send '✅ Work done! Take a break ☕'
+        #   ''}";
+        #   on-click-right = "${pkgs.writeShellScript "pomodoro-break" ''
+        #     notify-send '☕ Break started!'
+        #     pomodoro break && notify-send '⏰ Break over! Back to work 💼'
+        #   ''}";
+        # };
+
         "custom/audio_idle_inhibitor" = {
           format = "{icon}";
           exec = "sway-audio-idle-inhibit --dry-print-both-waybar";
@@ -223,14 +234,13 @@
           on-click = "pavucontrol";
         };
 
-        # "custom/prayer": {
-        #   "exec": " prayer-times ",
-        #   "interval": 30,
-        #   "tooltip": true ,
-        #   "tooltip-format": "{}",
-        #   "format": "🕌 {}"
-        # },
-
+        "custom/prayer" = {
+          exec = "${next-prayer}/bin/next-prayer";
+          interval = 30;
+          tooltip = true;
+          tooltip-format = "{}";
+          format = "🕌 {}";
+        };
       };
     };
     style = builtins.readFile ./dotfiles/waybar.css;
