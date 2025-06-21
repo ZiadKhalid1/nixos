@@ -5,8 +5,12 @@ A comprehensive NixOS configuration featuring Sway window manager with modern de
 ## 📸 Screenshots
 
 See the visual result of this configuration:
-- **Desktop Environment**: [`dotfiles/screenshot_20250621_233833.png`](dotfiles/screenshot_20250621_233833.png)
-- **Workspace Overview**: [`dotfiles/screenshot_20250621_234152.png`](dotfiles/screenshot_20250621_234152.png)
+
+### Desktop Environment
+![Desktop Environment](dotfiles/screenshot_20250621_233833.png)
+
+### Workspace Overview  
+![Workspace Overview](dotfiles/screenshot_20250621_234152.png)
 
 ## 🌟 Features
 
