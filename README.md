@@ -2,6 +2,12 @@
 
 A comprehensive NixOS configuration featuring Sway window manager with modern development tools, aesthetic theming, and productivity-focused applications.
 
+## 📸 Screenshots
+
+See the visual result of this configuration:
+- **Desktop Environment**: [`dotfiles/screenshot_20250621_233833.png`](dotfiles/screenshot_20250621_233833.png)
+- **Workspace Overview**: [`dotfiles/screenshot_20250621_234152.png`](dotfiles/screenshot_20250621_234152.png)
+
 ## 🌟 Features
 
 ### 🪟 Window Management
@@ -17,6 +23,7 @@ A comprehensive NixOS configuration featuring Sway window manager with modern de
 - **SwayNC** - Notification center with action buttons
 - **Custom fonts** - Cascadia Code, Fira Code, Font Awesome, Nerd Fonts
 - **Dynamic wallpaper** - Auto-downloaded Catppuccin wallpapers
+- **Visual Examples** - See screenshots in `dotfiles/` folder showcasing the complete desktop environment
 
 ### 🛠️ Development Environment
 - **Multiple editors**:
@@ -53,10 +60,11 @@ nixos/
 ├── sway.nix                 # Sway window manager config
 ├── waybar.nix               # Status bar configuration
 ├── hardware-configuration.nix # Hardware-specific settings
-├── bs.nix                   # Build script helper
 ├── shell.nix                # Development shell
 ├── npins/                   # Pinned dependencies
 ├── dotfiles/                # Configuration files
+│   ├── screenshot_20250621_233833.png # Desktop environment showcase
+│   ├── screenshot_20250621_234152.png # Workspace overview
 │   ├── swaync-config.json   # Notification center config
 │   ├── sworkstyle-config.toml # Workspace styling
 │   ├── waybar.css           # Status bar styling
@@ -99,6 +107,8 @@ nixos/
    ```
 
 5. **Reboot** to ensure all services start correctly
+
+   After installation, your desktop should look similar to the screenshots in the `dotfiles/` folder, featuring the modern Catppuccin-themed Sway environment with Waybar status bar.
 
 ### Development Environment
 For development and testing:
@@ -234,6 +244,6 @@ This configuration is provided as-is for educational and personal use. Individua
 
 ---
 
-**Maintained by**: Ziad Khaled  
-**NixOS Version**: 25.11  
+**Maintained by**: Ziad Khaled
+**NixOS Version**: 25.11
 **Last Updated**: 2025-01-11
