@@ -28,7 +28,7 @@
           "custom/audio_idle_inhibitor"
           "idle_inhibitor"
           "backlight"
-          "custom/pomodoro"
+          "custom/pomo"
           "battery"
           "pulseaudio"
           "clock"
@@ -173,20 +173,15 @@
           escape = true;
         };
 
-        # "custom/pomodoro" = {
-        #   exec = "pomodoro status";
-        #   exec-if = "echo pomodoro";
-        #   format = "🍅 {}";
-        #   interval = 1;
-        #   on-click = "${pkgs.writeShellScript "pomodoro-start" ''
-        #     notify-send '🍅 Work started!'
-        #     pomodoro start && notify-send '✅ Work done! Take a break ☕'
-        #   ''}";
-        #   on-click-right = "${pkgs.writeShellScript "pomodoro-break" ''
-        #     notify-send '☕ Break started!'
-        #     pomodoro break && notify-send '⏰ Break over! Back to work 💼'
-        #   ''}";
-        # };
+        "custom/pomo" = {
+          format = "   {}";
+          exec = "pomodoro-cli status --format json --time-format digital";
+          return-type = "json";
+          on-click = "pomodoro-cli start --add 5m --notify";
+          on-click-middle = "pomodoro-cli pause";
+          on-click-right = "pomodoro-cli stop";
+          interval = 1;
+        };
 
         "custom/audio_idle_inhibitor" = {
           format = "{icon}";

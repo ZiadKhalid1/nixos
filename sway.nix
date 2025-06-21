@@ -23,35 +23,27 @@ in
     package = with pkgs; sway.override { sway-unwrapped = swayfx; };
     extraConfig = ''
       workspace_auto_back_and_forth yes
-      input type:touchpad {
-        tap enabled
-        scroll_method two_finger edge
-        drag enabled
-        natural_scroll enabled
-        dwt enabled
-      }
       corner_radius 10
       smart_corner_radius enable
+      blur disable
+      blur_passes 5
+      blur_xray disable 
       shadows on
-      shadows_on_csd on
       shadow_blur_radius 10
-      layer_effects "waybar" {
-        blur enable;
-        blur_xray enable;
-        blur_ignore_transparent enable;
-        shadows enable;
-        corner_radius 20;
-      }
+      # layer_effects "waybar" {
+      #   blur enable;
+      #   blur_xray disable;
+      #   blur_ignore_transparent enable;
+      #   shadows enable;
+      #   corner_radius 20;
+      # }
       default_dim_inactive 0.1
-      dim_inactive_colors.unfocused #000000FF
-      dim_inactive_colors.urgent #900000FF
       gaps inner 5
       gaps outer 5
-      smart_gaps off
       default_border pixel 1
-      default_floating_border none
+      default_floating_border pixel 1
       for_window [tiling] border pixel 1
-      for_window [floating] border none
+      for_window [floating] border pixel 1
       smart_borders on
       focus_follows_mouse yes
       for_window [urgent=latest] focus
@@ -110,9 +102,18 @@ in
         "${modifier}+o" =
           ''exec ${grim} -g "$(${slurp})" - | ${pkgs.tesseract}/bin/tesseract - - | ${wl-copy} && ${notify-send} "$(${pkgs.wl-clipboard}/bin/wl-paste)"'';
       };
-      input."*" = {
-        xkb_layout = "us,ara";
-        xkb_options = "grp:win_space_toggle";
+      input = {
+        "*" = {
+          xkb_layout = "us,ara";
+          xkb_options = "grp:win_space_toggle";
+        };
+        "type:touchpad" = {
+          tap = "enabled";
+          scroll_method = "two_finger edge";
+          drag = "enabled";
+          natural_scroll = "enabled";
+          dwt = "enabled";
+        };
       };
       bars = [ ];
       floating.criteria = [
@@ -230,8 +231,6 @@ in
       }
     ];
   };
-
-  services.blueman-applet.enable = true;
 
   xdg.configFile."uwsm/env-sway".text = ''
     export SDL_VIDEODRIVER=wayland

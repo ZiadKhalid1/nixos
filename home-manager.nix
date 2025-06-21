@@ -22,14 +22,16 @@
     nil
     clang-tools
     clang
-    #(pkgs.callPackage ./pkgs/zed-editor-bin.nix { })
     zathura
+    (pkgs.callPackage ./pkgs/pomodoro-cli.nix { })
   ];
+
   programs = {
     firefox.enable = true;
     vim.enable = true;
     neovim.enable = true;
   };
+  programs.bat.enable = true;
   programs.rofi = {
     enable = true;
     #extraConfig = builtins.readFile ./rofi.css;
@@ -47,6 +49,11 @@
   };
   programs.fish = {
     enable = true;
+    shellAliases = {
+      ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+      cat = "bat";
+      update = "sudo nixos-rebuild switch";
+    };
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
     '';
@@ -88,11 +95,22 @@
     '';
   };
 
+  programs.eza = {
+    enable = true;
+    colors = "auto";
+    enableFishIntegration = true;
+    git = true;
+    icons = "auto";
+  };
+
   programs.foot = {
     enable = true;
     settings = {
       main = {
         font = "Fira Code:size=16";
+      };
+      colors = {
+        alpha = 0.5;
       };
     };
   };
@@ -108,6 +126,7 @@
     enable = true;
     rofi.enable = true;
     swaync.font = "FiraCodeNerd";
+    helix.useItalics = true;
     gtk = {
       enable = true;
       accent = "blue";
@@ -152,13 +171,44 @@
       pkgs.nil
       pkgs.nixd
     ];
-    languages.language = [
-      {
-        name = "nix";
-        auto-format = true;
-        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-      }
-    ];
+    languages = {
+      language = [
+        {
+          name = "nix";
+          auto-format = true;
+          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        }
+        {
+          name = "c";
+          scope = "source.c";
+          injection-regex = "c";
+          file-types = [ "c" ];
+          comment-token = "//";
+          block-comment-tokens = {
+            start = "/*";
+            end = "*/";
+          };
+          auto-format = true;
+          formatter.command = "${pkgs.clang-tools}/bin/clang-format";
+          language-servers = [ "clangd" ];
+          indent = {
+            tab-width = 2;
+            unit = "  ";
+          };
+        }
+      ];
+      grammer = [
+        {
+          name = "c";
+          source = {
+            git = "https://github.com/tree-sitter/tree-sitter-c";
+            rev = "7175a6dd5fc1cee660dce6fe23f6043d75af424a";
+          };
+        }
+
+      ];
+
+    };
 
   };
 

@@ -162,7 +162,6 @@ in
     grc
     fzf
     telegram-desktop
-    pomodoro-gtk
     vlc
     unicode-character-database
     kooha
@@ -182,7 +181,7 @@ in
     bilal
     next-prayer
     (callPackage ./pkgs/quran-companion.nix { })
-    # openpomodoro-cli
+    nix-search-tv
   ];
   # virtualisation.virtualbox.host.enableKvm = true;
   virtualisation.libvirtd.enable = true;
@@ -197,7 +196,7 @@ in
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
 
-  services.blueman.enable = true;
+  # services.blueman.enable = true;
 
   fonts.packages = with pkgs; [
     cascadia-code
@@ -225,7 +224,6 @@ in
       runshell = {
         command = "${pkgs.next-prayer}/bin/next-prayer";
         refresh = 30;
-        # justify = "top";
         runshell-position = "top-center";
         margin-top = 100;
       };
@@ -234,6 +232,12 @@ in
       #runshell {
       font-family: FiraMono;
       text-shadow: 1px 1px 2px black;
+      border: 2px solid white;
+      border-radius: 5px;
+      padding-top: 30px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      padding-left: 20px;
       }
     '';
   };
