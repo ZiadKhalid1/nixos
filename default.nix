@@ -3,7 +3,7 @@ let
   pkgs = import sources.nixpkgs {
     config.allowUnfree = true;
     overlays = [
-      (import ./overlays)
+      (import ./pkgs/overlay.nix)
     ];
   };
   catppuccin = sources.catppuccin;
@@ -168,6 +168,7 @@ in
     next-prayer
     (callPackage ./pkgs/quran-companion.nix { })
     evince
+    git-helper
   ];
 
   fonts.packages = with pkgs; [
