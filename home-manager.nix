@@ -54,7 +54,34 @@ in
       };
     };
   };
-
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = {
+      command_timeout = 1300;
+      scan_timeout = 50;
+      format = lib.concatStrings [
+        "$all"
+        "$nix_shell"
+        "$nodejs"
+        "$lua"
+        "$golang"
+        "$rust"
+        "$php"
+        "$git_branch"
+        "$git_commit"
+        "$git_state"
+        "$git_status"
+        "$username"
+        "$hostname"
+        "$directory"
+      ];
+      character = {
+        success_symbol = "[](bold green) ";
+        error_symbol = "[✗](bold red) ";
+      };
+    };
+  };
   programs.nix-your-shell = {
     enable = true;
     enableFishIntegration = true;
