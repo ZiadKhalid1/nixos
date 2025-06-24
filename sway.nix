@@ -30,13 +30,6 @@ in
       blur_xray disable 
       shadows on
       shadow_blur_radius 10
-      # layer_effects "waybar" {
-      #   blur enable;
-      #   blur_xray disable;
-      #   blur_ignore_transparent enable;
-      #   shadows enable;
-      #   corner_radius 20;
-      # }
       default_dim_inactive 0.1
       gaps inner 5
       gaps outer 5

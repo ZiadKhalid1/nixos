@@ -4,6 +4,14 @@
   lib,
   ...
 }:
+let
+  hasNixSearchTV = pkgs ? nix-search-tv;
+  compress = pkgs.writeShellApplication {
+    name = "compress";
+    runtimeInputs = [ pkgs.ffmpeg ];
+    text = builtins.readFile ./scripts/compress.sh;
+  };
+in
 {
   imports = [
     ./sway.nix
@@ -24,8 +32,28 @@
     clang
     zathura
     (pkgs.callPackage ./pkgs/pomodoro-cli.nix { })
+    sway-audio-idle-inhibit
+    nix-search-tv
+    compress
   ];
 
+  home.file.".config/nix-search-tv/config.json" = lib.mkIf hasNixSearchTV {
+    text = builtins.toJSON {
+      indexes = [
+        "nixpkgs"
+        "home-manager"
+        "nur"
+        "nixos"
+      ];
+      update_interval = "168h";
+      enable_waiting_message = true;
+      experimental = {
+        render_docs_indexes = {
+          nvf = "https://notashelf.github.io/nvf/options.html";
+        };
+      };
+    };
+  };
   programs = {
     firefox.enable = true;
     vim.enable = true;
@@ -35,17 +63,18 @@
   programs.rofi = {
     enable = true;
     #extraConfig = builtins.readFile ./rofi.css;
-    plugins = with pkgs; [
-      rofi-screenshot
-      rofi-bluetooth
-      rofi-power-menu
-    ];
   };
-
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    config = {
+      global = {
+        log_filter = "^$";
+      };
+    };
+  };
   programs.mpv = {
     enable = true;
-    config = {
-    };
   };
   programs.fish = {
     enable = true;
@@ -115,7 +144,7 @@
     enable = true;
     settings = {
       main = {
-        font = "Fira Code:size=16";
+        font = "JetBrains Mono:size=16";
       };
       colors = {
         alpha = 0.5;
