@@ -1,27 +1,12 @@
 let
   sources = import ./npins;
-  next-prayer = pkgs.writeShellScriptBin "next-prayer" ''
-    ${pkgs.gnused}/bin/sed -E ':a;N;$!ba;s/\n/ /;s/^([[:alpha:]]+) \((.*)\) [[:alpha:]]+ \((.*)\)/\1: \2 (\3)/' <(${bilal}/bin/bilal next ; ${bilal}/bin/bilal current)
-  '';
-  bilal = pkgs.callPackage ./pkgs/bilal.nix { };
   pkgs = import sources.nixpkgs {
-    config = {
-      allowUnfree = true;
-      packageOverrides = pkgs: {
-        gtklock-dpms-module = pkgs.callPackage ./pkgs/gtklock-dpms-module.nix { };
-        gtklock-runshell-module = pkgs.callPackage ./pkgs/gtklock-runshell-module.nix { };
-        gtklock-powerbar-module = pkgs.gtklock-powerbar-module.overrideAttrs {
-          postPatch = ''
-            substituteInPlace source.c \
-              --replace-fail "systemctl" "${pkgs.systemd}/bin/systemctl"
-          '';
-        };
-        inherit next-prayer bilal;
-      };
-    };
+    config.allowUnfree = true;
+    overlays = [
+      (import ./overlays)
+    ];
   };
   catppuccin = sources.catppuccin;
-
 in
 {
   imports = [
@@ -148,7 +133,10 @@ in
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.users.ziad = ./home-manager.nix;
-  home-manager.extraSpecialArgs = { inherit catppuccin next-prayer; };
+  home-manager.extraSpecialArgs = {
+    inherit catppuccin;
+    next-prayer = pkgs.next-prayer;
+  };
 
   #  ____  _                ___     _____           _
   # |  _ \| | ____ _ ___   ( _ )   |  ___|__  _ __ | |_ ___
@@ -265,5 +253,5 @@ in
     "nixos-hardware=${sources.nixos-hardware}"
     "nixos-config=/home/ziad/nixos/default.nix"
   ];
-  system.stateVersion = "25.11"; # Did you read the comment?
+  system.stateVersion = "25.11";
 }
