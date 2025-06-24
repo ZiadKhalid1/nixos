@@ -30,27 +30,43 @@ in
     <nixos-hardware/asus/battery.nix>
   ];
 
-  networking.hostName = "nixos"; # Define your hostname.
-
   boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  #  ____                       _ _
+  # / ___|  ___  ___ _   _ _ __(_) |_ _   _
+  # \___ \ / _ \/ __| | | | '__| | __| | | |
+  #  ___) |  __/ (__| |_| | |  | | |_| |_| |
+  # |____/ \___|\___|\__,_|_|  |_|\__|\__, |
+  #                                   |___/
+  security.polkit.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.passwd.enableGnomeKeyring = true;
+  security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
+  security.pam.loginLimits = [
+    {
+      domain = "@users";
+      item = "rtprio";
+      type = "-";
+      value = 1;
+    }
+  ];
+
+  #  ____                  _
+  # / ___|  ___ _ ____   _(_) ___ ___  ___
+  # \___ \ / _ \ '__\ \ / / |/ __/ _ \/ __|
+  #  ___) |  __/ |   \ V /| | (_|  __/\__ \
+  # |____/ \___|_|    \_/ |_|\___\___||___/
+
+  services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
-  services.pulseaudio.enable = false; # Use Pipewire, the modern sound subsystem
   services.printing = {
     enable = true;
     drivers = [ pkgs.hplipWithPlugin ];
-  };
-
-  services.xserver.xkb = {
-    layout = "us,ara";
-    model = "asus_laptop";
-    variant = "";
-    options = "caps:shift_modifier,grp:ctrl_space_toggle";
   };
   services.pipewire = {
     enable = true;
@@ -68,7 +84,14 @@ in
       };
     };
   };
-  services.gnome.gnome-keyring.enable = true;
+  virtualisation.libvirtd.enable = true;
+
+  #  _   _               _
+  # | | | | __ _ _ __ __| |_      ____ _ _ __ ___
+  # | |_| |/ _` | '__/ _` \ \ /\ / / _` | '__/ _ \
+  # |  _  | (_| | | | (_| |\ V  V / (_| | | |  __/
+  # |_| |_|\__,_|_|  \__,_| \_/\_/ \__,_|_|  \___|
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -77,27 +100,22 @@ in
     enable = true;
     daemon.enable = true;
   };
-
   hardware.asus.battery = {
     chargeUpto = 85; # Maximum level of charge for your battery, as a percentage.
     enableChargeUptoScript = true; # Whether to add charge-upto to environment.systemPackages. `charge-upto 85` temporarily sets the charge limit to 85%.
   };
 
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  #  ____       _   _   _
+  # / ___|  ___| |_| |_(_)_ __   __ _ ___
+  # \___ \ / _ \ __| __| | '_ \ / _` / __|
+  #  ___) |  __/ |_| |_| | | | | (_| \__ \
+  # |____/ \___|\__|\__|_|_| |_|\__, |___/
+  #                             |___/
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+  networking.hostName = "ziad-nixos";
   networking.networkmanager.enable = true;
-
-  # Set your time zone.
   time.timeZone = "Africa/Cairo";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -110,11 +128,6 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Configure keymap in X11
-  #  xkb_layout "us,ara"
-  #xkb_options "caps:shift_modifier,grp:ctrl_space_toggle"
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ziad = {
     isNormalUser = true;
     description = "ziad";
@@ -124,15 +137,25 @@ in
       "video"
       "kvm"
     ];
-    #packages = with pkgs; [ ];
   };
 
-  #home manager configuration
+  #  _
+  # | |__   ___  _ __ ___   ___   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __
+  # | '_ \ / _ \| '_ ` _ \ / _ \ | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '__|
+  # | | | | (_) | | | | | |  __/ | | | | | | (_| | | | | (_| | (_| |  __/ |
+  # |_| |_|\___/|_| |_| |_|\___| |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_|
+  #                                                           |___/
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.users.ziad = ./home-manager.nix;
   home-manager.extraSpecialArgs = { inherit catppuccin next-prayer; };
 
+  #  ____  _                ___     _____           _
+  # |  _ \| | ____ _ ___   ( _ )   |  ___|__  _ __ | |_ ___
+  # | |_) | |/ / _` / __|  / _ \/\ | |_ / _ \| '_ \| __/ __|
+  # |  __/|   < (_| \__ \ | (_>  < |  _| (_) | | | | |_\__ \
+  # |_|   |_|\_\__, |___/  \___/\/ |_|  \___/|_| |_|\__|___/
+  #            |___/
   environment.systemPackages = with pkgs; [
     pavucontrol
     ntfs3g
@@ -158,7 +181,6 @@ in
     (callPackage ./pkgs/quran-companion.nix { })
     evince
   ];
-  virtualisation.libvirtd.enable = true;
 
   fonts.packages = with pkgs; [
     cascadia-code
@@ -169,6 +191,12 @@ in
     jetbrains-mono
   ];
 
+  #  ____
+  # |  _ \ _ __ ___   __ _ _ __ __ _ _ __ ___  ___
+  # | |_) | '__/ _ \ / _` | '__/ _` | '_ ` _ \/ __|
+  # |  __/| | | (_) | (_| | | | (_| | | | | | \__ \
+  # |_|   |_|  \___/ \__, |_|  \__,_|_| |_| |_|___/
+  #                  |___/
   programs.uwsm = {
     enable = true;
     waylandCompositors = {
@@ -230,34 +258,6 @@ in
     '';
   };
 
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config = {
-      common = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Screencast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-      };
-
-    };
-  };
-
-  # security.pam.services.greetd.enableGnomeKeyring = true;
-  security.polkit.enable = true;
-  security.pam.services.login.enableGnomeKeyring = true;
-  security.pam.services.passwd.enableGnomeKeyring = true;
-  security.rtkit.enable = true; # Enable RealtimeKit for audio purposes
-  security.pam.loginLimits = [
-    {
-      domain = "@users";
-      item = "rtprio";
-      type = "-";
-      value = 1;
-    }
-  ];
-
   nix.nixPath = [
     "nixos=${sources.nixpkgs}"
     "nixpkgs=${sources.nixpkgs}"
@@ -265,35 +265,5 @@ in
     "nixos-hardware=${sources.nixos-hardware}"
     "nixos-config=/home/ziad/nixos/default.nix"
   ];
-
-  # programs.nix-ld = {
-  #   enable = true;
-  # };
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
-
 }

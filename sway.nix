@@ -16,6 +16,23 @@ let
 in
 {
   imports = [ ./waybar.nix ];
+  xdg = {
+    portal = {
+      enable = true;
+
+      config = {
+        sway = {
+          default = [ "gtk" ];
+          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+        };
+      };
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+    };
+  };
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
@@ -27,7 +44,7 @@ in
       smart_corner_radius enable
       blur disable
       blur_passes 5
-      blur_xray disable 
+      blur_xray disable
       shadows on
       shadow_blur_radius 10
       default_dim_inactive 0.1

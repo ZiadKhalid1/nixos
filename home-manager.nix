@@ -54,6 +54,11 @@ in
       };
     };
   };
+
+  programs.nix-your-shell = {
+    enable = true;
+    enableFishIntegration = true;
+  };
   programs = {
     firefox.enable = true;
     vim.enable = true;
