@@ -8,12 +8,12 @@ self: super: {
   gtklock-dpms-module = self.callPackage ./gtklock-dpms-module.nix { };
   gtklock-runshell-module = self.callPackage ./gtklock-runshell-module.nix { };
 
-  gtklock-powerbar-module = super.gtklock-powerbar-module.overrideAttrs (oldAttrs: {
-    postPatch = ''
-      substituteInPlace source.c \
-        --replace-fail "systemctl" "${self.systemd}/bin/systemctl"
-    '';
-  });
+  # gtklock-powerbar-module = super.gtklock-powerbar-module.overrideAttrs (oldAttrs: {
+  #   postPatch = ''
+  #     substituteInPlace source.c \
+  #       --replace-fail "systemctl" "${self.systemd}/bin/systemctl"
+  #   '';
+  # });
 
   git-helper = self.callPackage ./git-helper.nix { };
   pomodor-cli = self.callPackage ./pomodoro-cli.nix { };

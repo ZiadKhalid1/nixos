@@ -217,7 +217,6 @@ in
       gtklock-playerctl-module
       gtklock-powerbar-module
       gtklock-runshell-module
-      # gtklock-dpms-module
     ];
     config = {
       main = {

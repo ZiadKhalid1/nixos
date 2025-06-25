@@ -54,19 +54,18 @@ in
       default_floating_border pixel 1
       for_window [tiling] border pixel 1
       for_window [floating] border pixel 1
-      smart_borders on
+      hide_edge_borders smart
       focus_follows_mouse yes
-      for_window [urgent=latest] focus
+      focus_on_window_activation focus
+      no_focus [app_id="telegram-desktop"]
+      no_focus [window_role="pop-up"]
+      no_focus [title="Picture-in-Picture"]
+      no_focus [title="Update Available"]
       for_window [app_id="firefox" title="^Picture-in-Picture$"] sticky enable
       for_window [app_id="pavucontrol"] {
         sticky enable
         resize set width 50ppt height 50ppt
         move position 50ppt 0
-      }
-      for_window [app_id="io.gitlab.idevecore.Pomodoro"] {
-        floating enable
-        sticky enable
-        move position 1484 42
       }
     '';
     systemd.xdgAutostart = true;

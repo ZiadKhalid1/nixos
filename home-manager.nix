@@ -62,19 +62,6 @@ in
       scan_timeout = 50;
       format = lib.concatStrings [
         "$all"
-        "$nix_shell"
-        "$nodejs"
-        "$lua"
-        "$golang"
-        "$rust"
-        "$php"
-        "$git_branch"
-        "$git_commit"
-        "$git_state"
-        "$git_status"
-        "$username"
-        "$hostname"
-        "$directory"
       ];
       character = {
         success_symbol = "[](bold green) ";
@@ -90,6 +77,7 @@ in
     firefox.enable = true;
     vim.enable = true;
     neovim.enable = true;
+    lazygit.enable = true;
   };
   programs.bat.enable = true;
   programs.rofi = {
@@ -135,18 +123,6 @@ in
       {
         name = "done";
         src = pkgs.fishPlugins.done.src;
-      }
-      {
-        name = "fzf-fish";
-        src = pkgs.fishPlugins.fzf-fish.src;
-      }
-      {
-        name = "hydro";
-        src = pkgs.fishPlugins.hydro.src;
-      }
-      {
-        name = "forgit";
-        src = pkgs.fishPlugins.forgit.src;
       }
     ];
   };
@@ -196,6 +172,7 @@ in
     rofi.enable = true;
     swaync.font = "FiraCodeNerd";
     helix.useItalics = true;
+    lazygit.accent = "blue";
     gtk = {
       enable = true;
       accent = "blue";
