@@ -169,6 +169,7 @@ in
     (callPackage ./pkgs/quran-companion.nix { })
     evince
     git-helper
+    libreoffice-fresh
   ];
 
   fonts.packages = with pkgs; [

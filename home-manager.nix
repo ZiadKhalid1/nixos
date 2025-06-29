@@ -35,6 +35,8 @@ in
     sway-audio-idle-inhibit
     nix-search-tv
     compress
+    man-pages
+    man-pages-posix
   ];
 
   home.file.".config/nix-search-tv/config.json" = lib.mkIf hasNixSearchTV {

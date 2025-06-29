@@ -109,7 +109,7 @@ in
         "${modifier}+g" =
           ''exec IMG=~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png && ${grim} -g "$(slurp)" $IMG && ${wl-copy} < $IMG && ${notify-send} "Screenshot saved"'';
         "${modifier}+o" =
-          ''exec ${grim} -g "$(${slurp})" - | ${pkgs.tesseract}/bin/tesseract - - | ${wl-copy} && ${notify-send} "$(${pkgs.wl-clipboard}/bin/wl-paste)"'';
+          ''exec ${grim} -g "$(${slurp})" - | ${pkgs.tesseract}/bin/tesseract - - | ${wl-copy} && ${notify-send} -- "$(${pkgs.wl-clipboard}/bin/wl-paste)"'';
       };
       input = {
         "*" = {
