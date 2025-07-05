@@ -16,7 +16,6 @@ in
   ];
 
   boot.supportedFilesystems = [ "ntfs" ];
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -46,6 +45,15 @@ in
   #  ___) |  __/ |   \ V /| | (_|  __/\__ \
   # |____/ \___|_|    \_/ |_|\___\___||___/
 
+  # services.snapper.configs = {
+  #   home = {
+  #     SUBVOLUME = "/home";
+  #     ALLOW_USERS = [ "ziad" ];
+  #     TIMELINE_CREATE = true;
+  #     TIMELINE_CLEANUP = true;
+  #   };
+  #   snapshotinterval =
+  # };
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
@@ -69,7 +77,6 @@ in
       };
     };
   };
-  virtualisation.libvirtd.enable = true;
 
   #  _   _               _
   # | | | | __ _ _ __ __| |_      ____ _ _ __ ___
@@ -162,7 +169,6 @@ in
     xournalpp
     android-tools
     heimdall-gui
-    gnome-boxes
     tesseract
     bilal
     next-prayer
@@ -170,6 +176,10 @@ in
     evince
     git-helper
     libreoffice-fresh
+    jetbrains.clion
+    qemu
+    virtiofsd
+    file
   ];
 
   fonts.packages = with pkgs; [
@@ -246,6 +256,21 @@ in
       }
     '';
   };
+
+  # __     ___      _               _ _           _   _
+  # \ \   / (_)_ __| |_ _   _  __ _| (_)___  __ _| |_(_) ___  _ __
+  #  \ \ / /| | '__| __| | | |/ _` | | / __|/ _` | __| |/ _ \| '_ \
+  #   \ V / | | |  | |_| |_| | (_| | | \__ \ (_| | |_| | (_) | | | |
+  #    \_/  |_|_|   \__|\__,_|\__,_|_|_|___/\__,_|\__|_|\___/|_| |_|
+
+  programs.virt-manager.enable = true;
+  users.groups.libvirtd.members = [ "ziad" ];
+  virtualisation.libvirtd.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true;
+  systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
+  boot.binfmt.emulatedSystems = [
+    "aarch64-linux"
+  ];
 
   nix.nixPath = [
     "nixos=${sources.nixpkgs}"

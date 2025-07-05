@@ -17,15 +17,6 @@ in
     ./sway.nix
     "${catppuccin}/modules/home-manager"
   ];
-  home.pointerCursor = {
-    name = "Adwaita";
-    package = pkgs.adwaita-icon-theme;
-    size = 24;
-    x11 = {
-      enable = true;
-      defaultCursor = "Adwaita";
-    };
-  };
   home.packages = with pkgs; [
     nil
     clang-tools
@@ -38,7 +29,12 @@ in
     man-pages
     man-pages-posix
   ];
-
+  dconf.settings = {
+    "org/virt-manager/virt-manager/connections" = {
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
+    };
+  };
   home.file.".config/nix-search-tv/config.json" = lib.mkIf hasNixSearchTV {
     text = builtins.toJSON {
       indexes = [
@@ -104,14 +100,6 @@ in
       ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
       cat = "bat";
       update = "sudo nixos-rebuild switch";
-      ls = "eza --color=always --group-directories-first --icons";
-      ll = "eza -la --icons --octal-permissions --group-directories-first";
-      l = "eza -bGF --header --git --color=always --group-directories-first --icons";
-      llm = "eza -lbGd --header --git --sort=modified --color=always --group-directories-first --icons";
-      la = "eza --long --all --group --group-directories-first";
-      lx = "eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale --color=always --group-directories-first --icons";
-      lS = "eza -1 --color=always --group-directories-first --icons";
-      lt = "eza --tree --level=2 --color=always --group-directories-first --icons";
     };
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
@@ -145,7 +133,6 @@ in
   programs.eza = {
     enable = true;
     colors = "auto";
-    enableFishIntegration = true;
     git = true;
     icons = "always";
   };
@@ -175,6 +162,10 @@ in
     swaync.font = "FiraCodeNerd";
     helix.useItalics = true;
     lazygit.accent = "blue";
+    cursors = {
+      enable = true;
+      accent = "dark";
+    };
     gtk = {
       enable = true;
       accent = "blue";
@@ -245,17 +236,6 @@ in
           };
         }
       ];
-      grammer = [
-        {
-          name = "c";
-          source = {
-            git = "https://github.com/tree-sitter/tree-sitter-c";
-            rev = "7175a6dd5fc1cee660dce6fe23f6043d75af424a";
-          };
-        }
-
-      ];
-
     };
 
   };
