@@ -122,6 +122,7 @@ in
 
   users.users.ziad = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "ziad";
     extraGroups = [
       "networkmanager"
@@ -159,11 +160,6 @@ in
     grc
     fzf
     telegram-desktop
-    kooha
-    grim
-    slurp
-    wl-clipboard
-    imv
     obsidian
     bottom
     xournalpp
@@ -207,6 +203,8 @@ in
       };
     };
   };
+
+  programs.zsh.enable = true;
 
   programs.thunar = {
     enable = true;
@@ -268,9 +266,6 @@ in
   virtualisation.libvirtd.enable = true;
   virtualisation.spiceUSBRedirection.enable = true;
   systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
-  boot.binfmt.emulatedSystems = [
-    "aarch64-linux"
-  ];
 
   nix.nixPath = [
     "nixos=${sources.nixpkgs}"

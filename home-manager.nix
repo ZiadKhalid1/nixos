@@ -15,8 +15,10 @@ in
 {
   imports = [
     ./sway.nix
+    # ./prayerNotify.nix
     "${catppuccin}/modules/home-manager"
   ];
+  # services.prayerNotify.enable = true;
   home.packages = with pkgs; [
     nil
     clang-tools
@@ -28,7 +30,18 @@ in
     compress
     man-pages
     man-pages-posix
+    teams-for-linux
+    kooha
+    grim
+    slurp
+    wl-clipboard
+    imv
   ];
+  programs.chromium = {
+    enable = true;
+    package = pkgs.ungoogled-chromium;
+  };
+
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
       autoconnect = [ "qemu:///system" ];
@@ -54,7 +67,7 @@ in
   };
   programs.starship = {
     enable = true;
-    enableFishIntegration = true;
+    enableZshIntegration = true;
     settings = {
       command_timeout = 1300;
       scan_timeout = 50;
@@ -69,67 +82,93 @@ in
   };
   programs.nix-your-shell = {
     enable = true;
-    enableFishIntegration = true;
+    enableZshIntegration = true;
   };
+  # programs.bash = {
+  #   enable = true;
+  #   # bashrcExtra = "
+  #   # bind 'set show-all-if-ambiguous on'
+  #   # bind 'TAB:menu-complete'
+  #   # ";
+
+  # };
   programs = {
     firefox.enable = true;
     vim.enable = true;
     neovim.enable = true;
     lazygit.enable = true;
-  };
-  programs.bat.enable = true;
-  programs.rofi = {
-    enable = true;
-    #extraConfig = builtins.readFile ./rofi.css;
-  };
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    config = {
-      global = {
-        log_filter = "^$";
+    bat.enable = true;
+    rofi.enable = true;
+    mpv.enable = true;
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      config = {
+        global = {
+          log_filter = "^$";
+        };
       };
     };
   };
-  programs.mpv = {
+  # programs.fish = {
+  #   enable = true;
+  #   shellAliases = {
+  #     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+  #     cat = "bat";
+  #     update = "sudo nixos-rebuild switch";
+  #   };
+  #   interactiveShellInit = ''
+  #     set fish_greeting # Disable greeting
+  #   '';
+  #   plugins = [
+  #     # Enable a plugin (here grc for colorized command output) from nixpkgs
+  #     {
+  #       name = "grc";
+  #       src = pkgs.fishPlugins.grc.src;
+  #     }
+  #     {
+  #       name = "done";
+  #       src = pkgs.fishPlugins.done.src;
+  #     }
+  #   ];
+  # };
+  # programs.bash = {
+  #   enable = true;
+  #   initExtra = ''
+  #     if [[ "$(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm)" != "fish" && -z "$BASH_EXECUTION_STRING" ]]; then
+  #       if shopt -q login_shell; then
+  #         LOGIN_OPTION="--login"
+  #       else
+  #         LOGIN_OPTION=""
+  #       fi
+  #       exec fish $LOGIN_OPTION
+  #     fi
+  #   '';
+  # };
+
+  programs.zsh = {
     enable = true;
-  };
-  programs.fish = {
-    enable = true;
-    shellAliases = {
-      ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
-      cat = "bat";
-      update = "sudo nixos-rebuild switch";
+    enableCompletion = true;
+    syntaxHighlighting.enable = true;
+    autosuggestion = {
+      enable = true;
     };
-    interactiveShellInit = ''
-      set fish_greeting # Disable greeting
-    '';
-    plugins = [
-      # Enable a plugin (here grc for colorized command output) from nixpkgs
-      {
-        name = "grc";
-        src = pkgs.fishPlugins.grc.src;
-      }
-      {
-        name = "done";
-        src = pkgs.fishPlugins.done.src;
-      }
+    history.size = 10000;
+    history.ignoreAllDups = true;
+    history.path = "$HOME/.zsh_history";
+    history.ignorePatterns = [
+      "rm *"
+      "pkill *"
+      "cp *"
     ];
   };
-  programs.bash = {
-    enable = true;
-    initExtra = ''
-      if [[ "$(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm)" != "fish" && -z "$BASH_EXECUTION_STRING" ]]; then
-        if shopt -q login_shell; then
-          LOGIN_OPTION="--login"
-        else
-          LOGIN_OPTION=""
-        fi
-        exec fish $LOGIN_OPTION
-      fi
-    '';
+  home.shellAliases = {
+    ll = "ls -l";
+    edit = "sudo -e";
+    update = "sudo nixos-rebuild switch";
+    ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+    cat = "bat";
   };
-
   programs.eza = {
     enable = true;
     colors = "auto";
