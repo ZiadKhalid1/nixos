@@ -1,6 +1,6 @@
 # NixOS Desktop Configuration
 
-A comprehensive NixOS configuration featuring Sway window manager with modern development tools, aesthetic theming, and productivity-focused applications.
+A comprehensive NixOS configuration featuring dual desktop environments with modern development tools, aesthetic theming, and productivity-focused applications. Choose between GNOME (default) or Sway (specialisation) at boot or switch dynamically.
 
 ## 📸 Screenshots
 
@@ -14,12 +14,17 @@ See the visual result of this configuration:
 
 ## 🌟 Features
 
-### 🪟 Window Management
-- **Sway (SwayFX)** - Wayland compositor with eye-candy effects
-- **Autotiling** - Automatic window tiling
-- **Workspace management** - 9 workspaces with smart switching
-- **Corner radius** and **shadows** for modern aesthetics
-- **Floating window rules** for dialogs and utilities
+### 🖥️ Desktop Environments
+- **GNOME (Default)** - Full GNOME desktop environment with GDM
+  - Traditional desktop experience
+  - Complete GNOME ecosystem
+  - Wayland compositor
+- **Sway (Specialisation)** - SwayFX Wayland compositor with eye-candy effects
+  - Tiling window manager
+  - Autotiling and workspace management (9 workspaces)
+  - Corner radius and shadows for modern aesthetics
+  - Floating window rules for dialogs and utilities
+  - TUI greeter (greetd) for minimal login
 
 ### 🎨 Visual & Theming
 - **Catppuccin Theme** - Mocha flavor across all applications
@@ -57,27 +62,61 @@ See the visual result of this configuration:
 
 ## 📁 Project Structure
 
+The configuration uses NixOS specialisations to provide two distinct desktop environments:
+
 ```
 nixos/
-├── default.nix              # Main NixOS configuration
-├── home-manager.nix         # User environment configuration
+├── default.nix              # Main NixOS configuration with specialisations
+│                            # ├── Default: GNOME + GDM
+│                            # └── Specialisation "sway": Sway + greetd
+├── home-manager.nix         # Base user environment (shared by both)
+├── home-sway.nix            # Sway-specific user configuration
 ├── sway.nix                 # Sway window manager config
-├── waybar.nix               # Status bar configuration
+├── waybar.nix               # Status bar configuration (Sway only)
 ├── hardware-configuration.nix # Hardware-specific settings
 ├── shell.nix                # Development shell
 ├── npins/                   # Pinned dependencies
 ├── dotfiles/                # Configuration files
 │   ├── screenshot_20250621_233833.png # Desktop environment showcase
 │   ├── screenshot_20250621_234152.png # Workspace overview
-│   ├── swaync-config.json   # Notification center config
-│   ├── sworkstyle-config.toml # Workspace styling
-│   ├── waybar.css           # Status bar styling
+│   ├── swaync-config.json   # Notification center config (Sway)
+│   ├── sworkstyle-config.toml # Workspace styling (Sway)
+│   ├── waybar.css           # Status bar styling (Sway)
 │   └── uair.toml            # Pomodoro timer config
 └── pkgs/                    # Custom package definitions
     ├── bilal.nix            # Prayer times utility
     ├── find_unicode.nix     # Unicode search tool
     └── zed-editor-bin.nix   # Zed editor binary
 ```
+
+### Configuration Architecture
+- **`default.nix`**: Main system configuration defining both GNOME (default) and Sway (specialisation)
+- **`home-manager.nix`**: Base home-manager configuration shared by both environments
+- **`home-sway.nix`**: Extends base config with Sway-specific packages and services
+- **Specialisation system**: Allows switching between desktop environments without rebuilding
+
+### Home-Manager Configuration Inheritance
+```
+GNOME Environment (Default):
+└── home-manager.nix (base configuration)
+    ├── Common applications (Zed, Firefox, development tools)
+    ├── Shared services (direnv, git configuration)
+    └── Base system packages
+
+Sway Environment (Specialisation):
+└── home-sway.nix
+    ├── imports = [ ./home-manager.nix ./sway.nix ]
+    ├── Inherits ALL base configuration
+    ├── Adds Sway-specific packages (grim, slurp, wl-clipboard)
+    ├── Sway window manager configuration
+    ├── Waybar status bar
+    └── Additional Wayland utilities
+```
+
+This inheritance model ensures:
+- **No duplication**: Common configs are shared between environments
+- **Clean separation**: Environment-specific configs are isolated
+- **Easy maintenance**: Update base config once, affects both environments
 
 ## 🚀 Installation
 
@@ -112,7 +151,25 @@ nixos/
 
 5. **Reboot** to ensure all services start correctly
 
-   After installation, your desktop should look similar to the screenshots in the `dotfiles/` folder, featuring the modern Catppuccin-themed Sway environment with Waybar status bar.
+### Desktop Environment Options
+
+After installation, you have two options:
+
+#### Option 1: Boot Menu Selection
+At boot, systemd-boot will show:
+- **Default**: GNOME desktop environment
+- **sway**: Sway window manager environment
+
+#### Option 2: Dynamic Switching (without reboot)
+```bash
+# Switch to Sway environment
+sudo nixos-rebuild switch --specialisation sway
+
+# Switch back to GNOME (default)
+sudo nixos-rebuild switch
+```
+
+After switching to Sway, your desktop should look similar to the screenshots in the `dotfiles/` folder, featuring the modern Catppuccin-themed Sway environment with Waybar status bar.
 
 ### Development Environment
 For development and testing:
@@ -122,7 +179,10 @@ nix-shell  # Enters development shell with npins and build tools
 
 ## ⌨️ Key Bindings
 
-### Sway Window Manager
+### GNOME Desktop
+Standard GNOME keyboard shortcuts apply when using the default environment.
+
+### Sway Window Manager (Specialisation)
 | Key Combination | Action |
 |----------------|---------|
 | `Super + q` | Kill focused window |
@@ -159,11 +219,19 @@ catppuccin = {
 ```
 
 ### Adding Packages
-Add packages to `home-manager.nix`:
+- **For both environments**: Add packages to `home-manager.nix`
+- **For Sway only**: Add packages to `home-sway.nix`
+- **System-wide**: Add packages to `default.nix`
+
 ```nix
+# In home-manager.nix (shared)
 home.packages = with pkgs; [
-  # Add your packages here
-  example-package
+  example-package-for-both
+];
+
+# In home-sway.nix (Sway only)
+home.packages = with pkgs; [
+  sway-specific-package
 ];
 ```
 
@@ -229,6 +297,10 @@ sudo /run/current-system/bin/switch-to-configuration boot
 
 ## 📝 Notes
 
+- **Dual environment support**: Switch between GNOME and Sway without rebuilding
+- **Specialisation system**: Uses NixOS specialisations for clean environment separation
+- **Shared base configuration**: Common packages and settings in `home-manager.nix`
+- **Environment-specific configs**: Sway extensions in `home-sway.nix`
 - **Unfree packages** are enabled (for proprietary software)
 - **Wayland-first** configuration with X11 fallback where needed
 - **Home Manager** manages user-level configurations

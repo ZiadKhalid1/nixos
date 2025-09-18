@@ -1,3 +1,23 @@
+{ lib, ... }:
+
+#  ____            _    _                   ____             __ _
+# |  _ \  ___  ___| | _| |_ ___  _ __      / ___|___  _ __  / _(_) __ _
+# | | | |/ _ \/ __| |/ / __/ _ \| '_ \    | |   / _ \| '_ \| |_| |/ _` |
+# | |_| |  __/\__ \   <| || (_) | |_) |   | |__| (_) | | | |  _| | (_| |
+# |____/ \___||___/_|\_\\__\___/| .__/     \____\___/|_| |_|_| |_|\__, |
+#                               |_|                                |___/
+#
+# Desktop Environment Setup:
+# - Default: GNOME (GDM + GNOME Desktop)
+# - Specialization: Sway (greetd + Sway WM)
+#
+# Usage:
+# - Boot into GNOME: Default boot option
+# - Boot into Sway: Select "sway" from systemd-boot menu
+# - Switch to Sway: sudo nixos-rebuild switch --specialisation sway
+# - Switch back to GNOME: sudo nixos-rebuild switch
+#
+
 let
   sources = import ./npins;
   pkgs = import sources.nixpkgs {
@@ -7,6 +27,7 @@ let
     ];
   };
   catppuccin = sources.catppuccin;
+  rolling = import sources.rolling-pkgs { };
 in
 {
   imports = [
@@ -68,15 +89,16 @@ in
     pulse.enable = true;
     wireplumber.enable = true;
   };
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session";
-        user = "greeter";
-      };
-    };
-  };
+  # GNOME as default desktop environment
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
+  services.gnome.core-developer-tools.enable = false;
+  services.gnome.games.enable = false;
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    gnome-user-docs
+  ];
 
   #  _   _               _
   # | | | | __ _ _ __ __| |_      ____ _ _ __ ___
@@ -122,7 +144,7 @@ in
 
   users.users.ziad = {
     isNormalUser = true;
-    shell = pkgs.zsh;
+    shell = pkgs.bash;
     description = "ziad";
     extraGroups = [
       "networkmanager"
@@ -130,6 +152,30 @@ in
       "video"
       "kvm"
     ];
+  };
+
+  specialisation = {
+    sway = {
+      configuration = {
+        # Disable GNOME services for Sway
+        services.displayManager.gdm.enable = lib.mkForce false;
+        services.desktopManager.gnome.enable = lib.mkForce false;
+
+        # Enable greetd for Sway
+        services.greetd = {
+          enable = true;
+          settings = {
+            default_session = {
+              command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session";
+              user = "greeter";
+            };
+          };
+        };
+
+        # Sway-specific home-manager config
+        home-manager.users.ziad = lib.mkForce ./home-sway.nix;
+      };
+    };
   };
 
   #  _
@@ -153,6 +199,8 @@ in
   # |_|   |_|\_\__, |___/  \___/\/ |_|  \___/|_| |_|\__|___/
   #            |___/
   environment.systemPackages = with pkgs; [
+    wl-clipboard
+    zoom-us
     pavucontrol
     ntfs3g
     file-roller
@@ -176,6 +224,13 @@ in
     qemu
     virtiofsd
     file
+    code-cursor-fhs
+    gnomeExtensions.athantimes
+    gnomeExtensions.user-themes
+    gnome-tweaks
+    sassc
+    gtk-engine-murrine
+    gnome-themes-extra
   ];
 
   fonts.packages = with pkgs; [
@@ -214,17 +269,15 @@ in
     ];
   };
   programs = {
-    fish.enable = true;
     light.enable = true;
     dconf.enable = true;
-    regreet.enable = false;
     xfconf.enable = true;
   };
   programs.gtklock = {
     enable = true;
     modules = with pkgs; [
       gtklock-playerctl-module
-      gtklock-powerbar-module
+      rolling.gtklock-powerbar-module
       gtklock-runshell-module
     ];
     config = {
@@ -266,6 +319,10 @@ in
   virtualisation.libvirtd.enable = true;
   virtualisation.spiceUSBRedirection.enable = true;
   systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
+  virtualisation.vmware.host = {
+    enable = true;
+    package = pkgs.vmware-workstation;
+  };
 
   nix.nixPath = [
     "nixos=${sources.nixpkgs}"

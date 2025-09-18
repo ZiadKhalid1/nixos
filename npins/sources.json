@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "4e95eaf8a351956d75cc400318579967ca2b6d0f",
-      "url": "https://github.com/catppuccin/nix/archive/4e95eaf8a351956d75cc400318579967ca2b6d0f.tar.gz",
-      "hash": "1cj49aw1g1nk408ifw5ankrmfk0hzylv8gd9lk4qg6vxjrfdg09m"
+      "revision": "842da43be0d00d7cf4c26faf279bc71a614c259b",
+      "url": "https://github.com/catppuccin/nix/archive/842da43be0d00d7cf4c26faf279bc71a614c259b.tar.gz",
+      "hash": "046c3h2rcxps4g587cq6918wqs3gmx2kkk5kbhl11yv1aff6lqmd"
     },
     "home-manager": {
       "type": "Git",
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "863842639722dd12ae9e37ca83bcb61a63b36f6c",
-      "url": "https://github.com/nix-community/home-manager/archive/863842639722dd12ae9e37ca83bcb61a63b36f6c.tar.gz",
-      "hash": "0rw9n8d4v87pzlmw7ws15f0sldb51fd9528skpbzmrzl4pinsgij"
+      "revision": "fccb44df77266a3891939f35197f538dace3442f",
+      "url": "https://github.com/nix-community/home-manager/archive/fccb44df77266a3891939f35197f538dace3442f.tar.gz",
+      "hash": "161zbl6108hcx2d2ygpyvnryphi10j352829vv2ymfxm16mhixyx"
     },
     "nixos-hardware": {
       "type": "Git",
@@ -35,15 +35,21 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "1552a9f4513f3f0ceedcf90320e48d3d47165712",
-      "url": "https://github.com/NixOS/nixos-hardware/archive/1552a9f4513f3f0ceedcf90320e48d3d47165712.tar.gz",
-      "hash": "1y403mca047n9gq6c2dmfpziihhyp0q8mxprk4kz46n26q2g6z5y"
+      "revision": "a65b650d6981e23edd1afa1f01eb942f19cdcbb7",
+      "url": "https://github.com/NixOS/nixos-hardware/archive/a65b650d6981e23edd1afa1f01eb942f19cdcbb7.tar.gz",
+      "hash": "1hh2734hgilys0rzpmdpm46j8las860vvf6a7ddyf0p3asnz7cgm"
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre818960.076e8c6678d8/nixexprs.tar.xz",
-      "hash": "07whirsmb28bpslwhq19ggj4lkpghky2q45zasv3inskribvfzqh"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre854301.37ff64b71085/nixexprs.tar.xz",
+      "hash": "042pizl9aizmzgbprvn313sldjkkdgg5p760j3ms37aqwjxq7915"
+    },
+    "rolling-pkgs": {
+      "type": "Channel",
+      "name": "nixpkgs-unstable",
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre854301.37ff64b71085/nixexprs.tar.xz",
+      "hash": "042pizl9aizmzgbprvn313sldjkkdgg5p760j3ms37aqwjxq7915"
     }
   },
   "version": 5

@@ -191,10 +191,10 @@ in
         };
       };
       startup = [
-        {
-          command = "${pkgs.autotiling}/bin/autotiling";
-          always = true;
-        }
+        # {
+        #   command = "${pkgs.autotiling}/bin/autotiling";
+        #   always = true;
+        # }
         { command = "${pkgs.wl-clipboard}/bin/wl-paste --watch cliphist store"; }
         { command = "systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP &"; }
         {
