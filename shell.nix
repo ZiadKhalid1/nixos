@@ -15,5 +15,5 @@ pkgs.mkShell {
     npins
     (callPackage ./bs.nix { })
   ];
-  NIX_PATH = "nixos=${sources.nixpkgs}:nixpkgs=${sources.nixpkgs}:home-manager=${sources.home-manager}:nixos-config=/home/ziad/nixos/default.nix";
+  NIX_PATH = "mcp-nixos=${sources.mcp-nixos}:nixos=${sources.nixpkgs}:nixpkgs=${sources.nixpkgs}:home-manager=${sources.home-manager}:nixos-config=/home/ziad/nixos/default.nix";
 }

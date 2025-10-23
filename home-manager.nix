@@ -1,6 +1,7 @@
 {
   pkgs,
   catppuccin,
+  rolling,
   lib,
   ...
 }:
@@ -12,26 +13,52 @@ let
     text = builtins.readFile ./scripts/compress.sh;
   };
 in
+
 {
+  nixpkgs.config.allowUnfree = true;
+
   imports = [
     "${catppuccin}/modules/home-manager"
   ];
 
+  xdg.mimeApps.defaultApplications."x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
+
+  programs.uv.enable = true;
   home.packages = with pkgs; [
+    mcp-nixos
+    ente-auth
     nil
     gimp
-    thunderbird-bin
     clang-tools
     clang
-    zathura
-    (pkgs.callPackage ./pkgs/pomodoro-cli.nix { })
+    ente-desktop
     nix-search-tv
     compress
     man-pages
     man-pages-posix
     teams-for-linux
     kooha
+    rolling.gemini-cli
+    evince
+    zoom-us
+    jetbrains.clion
+    telegram-desktop
+    xournalpp
+    obsidian
+
   ];
+
+  programs.mcfly.enable = true;
+  dconf = {
+    enable = true;
+    settings."org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = with pkgs.gnomeExtensions; [
+        user-themes.extensionUuid
+        athantimes.extensionUuid
+      ];
+    };
+  };
 
   programs.chromium = {
     enable = true;
@@ -84,8 +111,6 @@ in
 
   programs = {
     firefox.enable = true;
-    vim.enable = true;
-    neovim.enable = true;
     lazygit.enable = true;
     bat.enable = true;
     rofi.enable = true;
@@ -101,23 +126,6 @@ in
     };
   };
 
-  # programs.zsh = {
-  #   enable = true;
-  #   enableCompletion = true;
-  #   syntaxHighlighting.enable = true;
-  #   autosuggestion = {
-  #     enable = true;
-  #   };
-  #   history.size = 10000;
-  #   history.ignoreAllDups = true;
-  #   history.path = "$HOME/.zsh_history";
-  #   history.ignorePatterns = [
-  #     "rm *"
-  #     "pkill *"
-  #     "cp *"
-  #   ];
-  # };
-
   home.shellAliases = {
     ll = "ls -l";
     edit = "sudo -e";
@@ -126,6 +134,7 @@ in
     update-sway = "sudo nixos-rebuild switch --specialisation sway";
     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
     cat = "bat";
+
   };
   programs.bash.enable = true;
 
@@ -143,7 +152,6 @@ in
   catppuccin = {
     flavor = "mocha";
     enable = true;
-    rofi.enable = true;
     helix.useItalics = true;
     accent = "blue";
     cursors = {
@@ -154,7 +162,6 @@ in
       icon.enable = true;
     };
   };
-
   gtk = {
     enable = true;
     theme = {

@@ -15,7 +15,11 @@
     slurp
     wl-clipboard
     imv
+    thunderbird-bin
   ];
+
+  xdg.mimeApps.defaultApplications."x-scheme-handler/mailto" = "thunderbird.desktop";
+  programs.rofi.enable = true;
 
   # Sway-specific services
   services.cliphist = {

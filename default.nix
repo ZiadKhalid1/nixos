@@ -66,15 +66,8 @@ in
   #  ___) |  __/ |   \ V /| | (_|  __/\__ \
   # |____/ \___|_|    \_/ |_|\___\___||___/
 
-  # services.snapper.configs = {
-  #   home = {
-  #     SUBVOLUME = "/home";
-  #     ALLOW_USERS = [ "ziad" ];
-  #     TIMELINE_CREATE = true;
-  #     TIMELINE_CLEANUP = true;
-  #   };
-  #   snapshotinterval =
-  # };
+  services.netbird.enable = true;
+
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
@@ -98,6 +91,12 @@ in
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
     gnome-user-docs
+    nautilus
+    gnome-text-editor
+    gnome-maps
+    gnome-contacts
+    gnome-calendar
+    gnome-software
   ];
 
   #  _   _               _
@@ -186,9 +185,12 @@ in
   #                                                           |___/
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
+  home-manager.backupFileExtension = "bak";
   home-manager.users.ziad = ./home-manager.nix;
   home-manager.extraSpecialArgs = {
     inherit catppuccin;
+    inherit rolling;
+    inherit pkgs;
     next-prayer = pkgs.next-prayer;
   };
 
@@ -199,38 +201,22 @@ in
   # |_|   |_|\_\__, |___/  \___/\/ |_|  \___/|_| |_|\__|___/
   #            |___/
   environment.systemPackages = with pkgs; [
-    wl-clipboard
-    zoom-us
-    pavucontrol
     ntfs3g
-    file-roller
-    brightnessctl
-    grc
-    fzf
-    telegram-desktop
-    obsidian
     bottom
-    xournalpp
     android-tools
-    heimdall-gui
-    tesseract
-    bilal
-    next-prayer
-    (callPackage ./pkgs/quran-companion.nix { })
-    evince
+    heimdall
     git-helper
     libreoffice-fresh
-    jetbrains.clion
-    qemu
-    virtiofsd
     file
-    code-cursor-fhs
+    qemu
+    catppuccin-papirus-folders
+    magnetic-catppuccin-gtk
+    discord
     gnomeExtensions.athantimes
     gnomeExtensions.user-themes
+    fzf
     gnome-tweaks
-    sassc
-    gtk-engine-murrine
-    gnome-themes-extra
+
   ];
 
   fonts.packages = with pkgs; [
@@ -258,8 +244,6 @@ in
       };
     };
   };
-
-  programs.zsh.enable = true;
 
   programs.thunar = {
     enable = true;
@@ -295,14 +279,6 @@ in
       };
     };
     style = ''
-      #runshell {
-      font-family: FiraMono;
-      text-shadow: 1px 1px 2px black;
-      border: 2px solid white;
-      border-radius: 5px;
-      padding-top: 30px;
-      padding-right: 20px;
-      padding-bottom: 10px;
       padding-left: 20px;
       }
     '';
@@ -319,10 +295,16 @@ in
   virtualisation.libvirtd.enable = true;
   virtualisation.spiceUSBRedirection.enable = true;
   systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
-  virtualisation.vmware.host = {
-    enable = true;
-    package = pkgs.vmware-workstation;
+
+  nix.gc = {
+    automatic = true;
+    options = "--delete-older-than 7d";
   };
+
+  nix.settings.trusted-users = [
+    "root"
+    "ziad"
+  ];
 
   nix.nixPath = [
     "nixos=${sources.nixpkgs}"

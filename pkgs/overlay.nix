@@ -16,5 +16,6 @@ self: super: {
   # });
 
   git-helper = self.callPackage ./git-helper.nix { };
-  pomodor-cli = self.callPackage ./pomodoro-cli.nix { };
+  pomodoro-cli = self.callPackage ./pomodoro-cli.nix { };
+  quran-companion = self.callPackage ./quran-companion.nix { };
 }
