@@ -15,21 +15,21 @@ let
 in
 
 {
-  nixpkgs.config.allowUnfree = true;
-
   imports = [
     "${catppuccin}/modules/home-manager"
   ];
 
-  xdg.mimeApps.defaultApplications."x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
+  xdg.mimeApps.defaultApplications = {
+    "x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
+    "x-scheme-handler/terminal" = "foot.desktop";
+  };
 
-  programs.uv.enable = true;
   home.packages = with pkgs; [
+    qtspim
+    obs-studio
     mcp-nixos
     ente-auth
-    nil
     gimp
-    clang-tools
     clang
     ente-desktop
     nix-search-tv
@@ -45,10 +45,10 @@ in
     telegram-desktop
     xournalpp
     obsidian
-
+    discord
+    signal-desktop
   ];
 
-  programs.mcfly.enable = true;
   dconf = {
     enable = true;
     settings."org/gnome/shell" = {
@@ -58,11 +58,6 @@ in
         athantimes.extensionUuid
       ];
     };
-  };
-
-  programs.chromium = {
-    enable = true;
-    package = pkgs.ungoogled-chromium;
   };
 
   dconf.settings = {
@@ -90,26 +85,30 @@ in
     };
   };
 
-  programs.starship = {
-    enable = true;
-    settings = {
-      command_timeout = 1300;
-      scan_timeout = 50;
-      format = lib.concatStrings [
-        "$all"
-      ];
-      character = {
-        success_symbol = "[](bold green) ";
-        error_symbol = "[✗](bold red) ";
+  programs = {
+    uv.enable = true;
+    mcfly.enable = true;
+    chromium = {
+      enable = true;
+      package = pkgs.ungoogled-chromium;
+    };
+    starship = {
+      enable = true;
+      settings = {
+        command_timeout = 1300;
+        scan_timeout = 50;
+        format = lib.concatStrings [
+          "$all"
+        ];
+        character = {
+          success_symbol = "[](bold green) ";
+          error_symbol = "[✗](bold red) ";
+        };
       };
     };
-  };
-
-  programs.nix-your-shell = {
-    enable = true;
-  };
-
-  programs = {
+    nix-your-shell = {
+      enable = true;
+    };
     firefox.enable = true;
     lazygit.enable = true;
     bat.enable = true;
@@ -124,6 +123,89 @@ in
         };
       };
     };
+    bash.enable = true;
+    eza = {
+      enable = true;
+      colors = "auto";
+      git = true;
+      icons = "always";
+    };
+    git = {
+      enable = true;
+      settings = {
+        user = {
+          email = "ziadk1433@gmail.com";
+          name = "Ziad Khaled";
+        };
+      };
+    };
+    helix = {
+      enable = true;
+      settings = {
+        editor.cursor-shape = {
+          normal = "block";
+          insert = "bar";
+          select = "underline";
+        };
+      };
+      extraPackages = [
+        pkgs.nil
+        pkgs.nixd
+      ];
+      languages = {
+        language = [
+          {
+            name = "nix";
+            auto-format = true;
+            formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+          }
+          {
+            name = "c";
+            scope = "source.c";
+            injection-regex = "c";
+            file-types = [ "c" ];
+            comment-token = "//";
+            block-comment-tokens = {
+              start = "/*";
+              end = "*/";
+            };
+            auto-format = true;
+            formatter.command = "${pkgs.clang-tools}/bin/clang-format";
+            language-servers = [ "clangd" ];
+            indent = {
+              tab-width = 2;
+              unit = "  ";
+            };
+          }
+        ];
+      };
+    };
+    zed-editor = {
+      enable = true;
+      package = pkgs.zed-editor-fhs;
+      extensions = [
+        "nix"
+        "toml"
+      ];
+      userSettings = {
+        auto-update = false;
+        vim_mode = true;
+        languages = {
+          Nix = {
+            formatter = {
+              external = {
+                command = "nixfmt";
+              };
+            };
+          };
+        };
+      };
+      extraPackages = [
+        pkgs.nil
+        pkgs.nixd
+        pkgs.nixfmt-rfc-style
+      ];
+    };
   };
 
   home.shellAliases = {
@@ -134,15 +216,6 @@ in
     update-sway = "sudo nixos-rebuild switch --specialisation sway";
     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
     cat = "bat";
-
-  };
-  programs.bash.enable = true;
-
-  programs.eza = {
-    enable = true;
-    colors = "auto";
-    git = true;
-    icons = "always";
   };
 
   services.gnome-keyring = {
@@ -173,19 +246,15 @@ in
     };
   };
 
-  programs.git = {
-    enable = true;
-    delta.enable = true;
-    userEmail = "ziadk1433@gmail.com";
-    userName = "Ziad Khaled";
-  };
-
   xdg = {
     enable = true;
     userDirs = {
       enable = true;
       createDirectories = true;
     };
+    configFile."xfce4/helpers.rc".text = ''
+      TerminalEmulator=foot
+    '';
   };
 
   xdg.configFile."bilal/config.toml".text = ''
@@ -195,75 +264,6 @@ in
     method = "Egyptian"
     time_format = "12H"
   '';
-
-  programs.helix = {
-    enable = true;
-    settings = {
-      editor.cursor-shape = {
-        normal = "block";
-        insert = "bar";
-        select = "underline";
-      };
-    };
-    extraPackages = [
-      pkgs.nil
-      pkgs.nixd
-    ];
-    languages = {
-      language = [
-        {
-          name = "nix";
-          auto-format = true;
-          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-        }
-        {
-          name = "c";
-          scope = "source.c";
-          injection-regex = "c";
-          file-types = [ "c" ];
-          comment-token = "//";
-          block-comment-tokens = {
-            start = "/*";
-            end = "*/";
-          };
-          auto-format = true;
-          formatter.command = "${pkgs.clang-tools}/bin/clang-format";
-          language-servers = [ "clangd" ];
-          indent = {
-            tab-width = 2;
-            unit = "  ";
-          };
-        }
-      ];
-    };
-  };
-
-  programs.zed-editor = {
-    enable = true;
-    package = pkgs.zed-editor-fhs;
-    extensions = [
-      "nix"
-      "toml"
-    ];
-    userSettings = {
-      auto-update = false;
-      vim_mode = true;
-      languages = {
-        Nix = {
-          formatter = {
-            external = {
-              command = "nixfmt";
-            };
-          };
-        };
-      };
-    };
-    extraPackages = [
-      pkgs.nil
-      pkgs.nixd
-      pkgs.nixfmt-rfc-style
-    ];
-  };
 
   home.stateVersion = "25.11";
 }

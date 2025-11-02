@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "8a084b86b6a4b2a1575e8cc67e07c4a687fce276",
-      "url": "https://github.com/catppuccin/nix/archive/8a084b86b6a4b2a1575e8cc67e07c4a687fce276.tar.gz",
-      "hash": "0zlf30akngjx8vhpr4ljn24y2yzk1cawsgp85b1i3vn53vw842ja"
+      "revision": "fd1bc7b1af0a576edb13c166c4b1f7b5c7555a73",
+      "url": "https://github.com/catppuccin/nix/archive/fd1bc7b1af0a576edb13c166c4b1f7b5c7555a73.tar.gz",
+      "hash": "06sxigp31cwv699rn9cqyib80q1d7q9h2da5js344rkklk81gbds"
     },
     "home-manager": {
       "type": "Git",
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "870883ba11ba1c84f756c0c1f9fa74cdb2a16c1e",
-      "url": "https://github.com/nix-community/home-manager/archive/870883ba11ba1c84f756c0c1f9fa74cdb2a16c1e.tar.gz",
-      "hash": "0xkq9g1p8z0y800qpjr2ass2hwm95va3sr76pnyf4z0xqharq49v"
+      "revision": "87044c57222fb485974062e2dd557e7b8abd8fff",
+      "url": "https://github.com/nix-community/home-manager/archive/87044c57222fb485974062e2dd557e7b8abd8fff.tar.gz",
+      "hash": "0lgvrxbk57qkaacmlp6azxsb4d9av8zg54xbkgm760szqdv7i978"
     },
     "mcp-nixos": {
       "type": "GitRelease",

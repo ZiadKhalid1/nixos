@@ -1,4 +1,8 @@
-{ next-prayer, ... }:
+{
+  next-prayer,
+  pkgs,
+  ...
+}:
 {
   programs.waybar = {
     enable = true;
@@ -63,7 +67,7 @@
           };
           interval = 1;
           format = "󰻠 {usage:2}%";
-          on-click = "foot btm";
+          on-click = "${pkgs.foot}/bin/foot ${pkgs.bottom}/bin/btm";
         };
 
         "memory" = {
@@ -74,7 +78,7 @@
           };
           interval = 5;
           format = "󰍛 {}%";
-          on-click = "foot btm";
+          on-click = "${pkgs.foot}/bin/foot ${pkgs.bottom}/bin/btm";
         };
 
         "disk#one" = {
@@ -202,8 +206,8 @@
             "🔅"
             "🔆"
           ];
-          on-scroll-down = "brightnessctl -c backlight set 1%-";
-          on-scroll-up = "brightnessctl -c backlight set +1%";
+          on-scroll-down = "${pkgs.brightnessctl}/bin/brightnessctl -c backlight set 1%-";
+          on-scroll-up = "${pkgs.brightnessctl}/bin/brightnessctl -c backlight set +1%";
         };
 
         "pulseaudio" = {
@@ -226,7 +230,7 @@
               ""
             ];
           };
-          on-click = "pavucontrol";
+          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
         };
 
         "custom/prayer" = {

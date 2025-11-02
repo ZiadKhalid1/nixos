@@ -11,6 +11,8 @@
   # Additional Sway-specific packages
   home.packages = with pkgs; [
     sway-audio-idle-inhibit
+    nwg-displays
+    nwg-clipman
     grim
     slurp
     wl-clipboard
@@ -21,6 +23,7 @@
   xdg.mimeApps.defaultApplications."x-scheme-handler/mailto" = "thunderbird.desktop";
   programs.rofi.enable = true;
 
+  services.gnome-keyring.enable = true;
   # Sway-specific services
   services.cliphist = {
     enable = true;

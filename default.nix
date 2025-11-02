@@ -28,6 +28,26 @@ let
   };
   catppuccin = sources.catppuccin;
   rolling = import sources.rolling-pkgs { };
+  commonPackages = with pkgs; [
+    xarchiver
+    ntfs3g
+    bottom
+    android-tools
+    heimdall
+    git-helper
+    libreoffice-fresh
+    file
+    qemu
+    catppuccin-papirus-folders
+    magnetic-catppuccin-gtk
+    fzf
+    file-roller
+  ];
+  gnomePackages = with pkgs; [
+    gnomeExtensions.athantimes
+    gnomeExtensions.user-themes
+    gnome-tweaks
+  ];
 in
 {
   imports = [
@@ -159,6 +179,7 @@ in
         # Disable GNOME services for Sway
         services.displayManager.gdm.enable = lib.mkForce false;
         services.desktopManager.gnome.enable = lib.mkForce false;
+        programs.seahorse.enable = true;
 
         # Enable greetd for Sway
         services.greetd = {
@@ -171,8 +192,59 @@ in
           };
         };
 
+        programs.gtklock = {
+          enable = true;
+          modules = with pkgs; [
+            gtklock-playerctl-module
+            rolling.gtklock-powerbar-module
+            gtklock-runshell-module
+          ];
+          config = {
+            main = {
+              idle-hide = true;
+              idle-timeout = 10;
+              start-hidden = true;
+              time-format = "%I:%M";
+            };
+            runshell = {
+              command = "${pkgs.next-prayer}/bin/next-prayer";
+              refresh = 30;
+              runshell-position = "top-center";
+              margin-top = 100;
+            };
+          };
+          style = ''
+            padding-left: 20px;
+            }
+          '';
+        };
+
+        programs.uwsm = {
+          enable = true;
+          waylandCompositors = {
+            sway = {
+              prettyName = "Sway";
+              comment = "Sway compositor managed by UWSM";
+              binPath = "${pkgs.swayfx}/bin/sway";
+            };
+          };
+        };
+        xdg.portal = {
+          enable = true;
+          wlr.enable = true;
+        };
+        xdg.portal.config.common.default = "*";
+
+        # environment.systemPackages = with pkgs; [
+        #   libgnome-keyring
+        # ];
+        services.gnome.gnome-keyring = {
+          enable = true;
+        };
         # Sway-specific home-manager config
         home-manager.users.ziad = lib.mkForce ./home-sway.nix;
+
+        environment.systemPackages = commonPackages;
       };
     };
   };
@@ -200,24 +272,8 @@ in
   # |  __/|   < (_| \__ \ | (_>  < |  _| (_) | | | | |_\__ \
   # |_|   |_|\_\__, |___/  \___/\/ |_|  \___/|_| |_|\__|___/
   #            |___/
-  environment.systemPackages = with pkgs; [
-    ntfs3g
-    bottom
-    android-tools
-    heimdall
-    git-helper
-    libreoffice-fresh
-    file
-    qemu
-    catppuccin-papirus-folders
-    magnetic-catppuccin-gtk
-    discord
-    gnomeExtensions.athantimes
-    gnomeExtensions.user-themes
-    fzf
-    gnome-tweaks
 
-  ];
+  environment.systemPackages = commonPackages ++ gnomePackages;
 
   fonts.packages = with pkgs; [
     cascadia-code
@@ -234,54 +290,20 @@ in
   # |  __/| | | (_) | (_| | | | (_| | | | | | \__ \
   # |_|   |_|  \___/ \__, |_|  \__,_|_| |_| |_|___/
   #                  |___/
-  programs.uwsm = {
-    enable = true;
-    waylandCompositors = {
-      sway = {
-        prettyName = "Sway";
-        comment = "Sway compositor managed by UWSM";
-        binPath = "${pkgs.swayfx}/bin/sway";
-      };
-    };
-  };
 
   programs.thunar = {
     enable = true;
     plugins = with pkgs.xfce; [
       thunar-archive-plugin
       thunar-volman
+      thunar-media-tags-plugin
+      thunar-vcs-plugin
     ];
   };
   programs = {
     light.enable = true;
     dconf.enable = true;
     xfconf.enable = true;
-  };
-  programs.gtklock = {
-    enable = true;
-    modules = with pkgs; [
-      gtklock-playerctl-module
-      rolling.gtklock-powerbar-module
-      gtklock-runshell-module
-    ];
-    config = {
-      main = {
-        idle-hide = true;
-        idle-timeout = 10;
-        start-hidden = true;
-        time-format = "%I:%M";
-      };
-      runshell = {
-        command = "${pkgs.next-prayer}/bin/next-prayer";
-        refresh = 30;
-        runshell-position = "top-center";
-        margin-top = 100;
-      };
-    };
-    style = ''
-      padding-left: 20px;
-      }
-    '';
   };
 
   # __     ___      _               _ _           _   _

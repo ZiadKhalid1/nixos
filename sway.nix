@@ -16,23 +16,6 @@ let
 in
 {
   imports = [ ./waybar.nix ];
-  xdg = {
-    portal = {
-      enable = true;
-
-      config = {
-        sway = {
-          default = [ "gtk" ];
-          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        };
-      };
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk
-      ];
-    };
-  };
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
