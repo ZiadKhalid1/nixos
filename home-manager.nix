@@ -12,6 +12,9 @@ let
     runtimeInputs = [ pkgs.ffmpeg ];
     text = builtins.readFile ./scripts/compress.sh;
   };
+  signal-desktop-wrapped = pkgs.writeShellScriptBin "signal-desktop" ''
+    exec ${rolling.signal-desktop-bin}/bin/signal-desktop --password-store="gnome-libsecret" "$@"
+  '';
 in
 
 {
@@ -19,12 +22,23 @@ in
     "${catppuccin}/modules/home-manager"
   ];
 
+  xdg.desktopEntries.signal-desktop = {
+    name = "Signal";
+    exec = "signal-desktop";
+    icon = "${rolling.signal-desktop-bin}/share/icons/hicolor/512x512/apps/signal-desktop.png";
+    comment = "Private messenger";
+    genericName = "Private Messenger";
+  };
+
   xdg.mimeApps.defaultApplications = {
     "x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
     "x-scheme-handler/terminal" = "foot.desktop";
   };
 
   home.packages = with pkgs; [
+    codeblocksFull
+    snapper-gui
+    standardnotes
     qtspim
     obs-studio
     mcp-nixos
@@ -46,7 +60,9 @@ in
     xournalpp
     obsidian
     discord
-    signal-desktop
+    signal-desktop-wrapped
+    octaveFull
+    octavePackages.control
   ];
 
   dconf = {
@@ -110,6 +126,7 @@ in
       enable = true;
     };
     firefox.enable = true;
+    claude-code.enable = true;
     lazygit.enable = true;
     bat.enable = true;
     rofi.enable = true;
@@ -211,11 +228,11 @@ in
   home.shellAliases = {
     ll = "ls -l";
     edit = "sudo -e";
-    update = "sudo nixos-rebuild switch";
-    update-gnome = "sudo nixos-rebuild switch";
-    update-sway = "sudo nixos-rebuild switch --specialisation sway";
     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
     cat = "bat";
+    build-sway = "systemd-inhibit --what=idle sudo nixos-rebuild switch --specialisation sway";
+    build = "systemd-inhibit --what=idle sudo nixos-rebuild switch";
+    nix-uns = "nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz -p";
   };
 
   services.gnome-keyring = {

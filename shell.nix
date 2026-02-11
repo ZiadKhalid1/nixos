@@ -1,19 +1,10 @@
 let
-  # Import pinned repositories
-  sources = import ./npins;
-  # Grab nixpkgs from there
-  pkgs = import sources.nixpkgs { config.allowUnfree = true; };
-  # Grab home-manager as well
-  # home-manager = import sources.home-manager { };
+  pkgs = import <nixpkgs> { config.allowUnfree = true; };
 in
 # Create a shell
 pkgs.mkShell {
-  nativeBuildInputs = [
-    pkgs.npins # grab the latest version of niv
-  ];
   packages = with pkgs; [
-    npins
     (callPackage ./bs.nix { })
   ];
-  NIX_PATH = "mcp-nixos=${sources.mcp-nixos}:nixos=${sources.nixpkgs}:nixpkgs=${sources.nixpkgs}:home-manager=${sources.home-manager}:nixos-config=/home/ziad/nixos/default.nix";
+  NIX_PATH = "nixos-config=/home/ziad/nixos/default.nix";
 }

@@ -19,16 +19,22 @@
 #
 
 let
-  sources = import ./npins;
-  pkgs = import sources.nixpkgs {
+  # sources = import ./npins;
+  pkgs = import <nixpkgs> {
     config.allowUnfree = true;
     overlays = [
       (import ./pkgs/overlay.nix)
+      (self: super: {
+         mcp-nixos = if super ? mcp-nixos then super.mcp-nixos else rolling.mcp-nixos;
+      })
     ];
   };
-  catppuccin = sources.catppuccin;
-  rolling = import sources.rolling-pkgs { };
+  # catppuccin = sources.catppuccin;
+  catppuccin = builtins.fetchTarball "https://github.com/catppuccin/nix/archive/release-25.05.tar.gz";
+  # rolling = import sources.rolling-pkgs { };
+  rolling = import <nixos-unstable> { config.allowUnfree = true; };
   commonPackages = with pkgs; [
+    freerdp
     xarchiver
     ntfs3g
     bottom
@@ -42,6 +48,11 @@ let
     magnetic-catppuccin-gtk
     fzf
     file-roller
+    (octave.withPackages (
+      opkgs: with opkgs; [
+        control
+      ]
+    ))
   ];
   gnomePackages = with pkgs; [
     gnomeExtensions.athantimes
@@ -55,6 +66,10 @@ in
     <home-manager/nixos>
     <nixos-hardware/asus/battery.nix>
   ];
+
+  virtualisation.docker = {
+    enable = true;
+  };
 
   boot.supportedFilesystems = [ "ntfs" ];
   # Bootloader.
@@ -88,6 +103,16 @@ in
 
   services.netbird.enable = true;
 
+  services.snapper = {
+    configs = {
+      root = {
+        SUBVOLUME = "/";
+        ALLOW_USERS = [ "ziad" ];
+        TIMELINE_CREATE = true;
+      };
+    };
+  };
+
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
@@ -105,6 +130,27 @@ in
   # GNOME as default desktop environment
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gnome
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    config = {
+      common.default = [
+        "gnome"
+        "gtk"
+      ];
+      gnome = {
+        default = [
+          "gnome"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      };
+    };
+  };
 
   services.gnome.core-developer-tools.enable = false;
   services.gnome.games.enable = false;
@@ -125,6 +171,7 @@ in
   # |  _  | (_| | | | (_| |\ V  V / (_| | | |  __/
   # |_| |_|\__,_|_|  \__,_| \_/\_/ \__,_|_|  \___|
 
+  hardware.i2c.enable = true;
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -170,6 +217,8 @@ in
       "wheel"
       "video"
       "kvm"
+      "i2c"
+      "docker"
     ];
   };
 
@@ -233,7 +282,7 @@ in
           enable = true;
           wlr.enable = true;
         };
-        xdg.portal.config.common.default = "*";
+        xdg.portal.config.common.default = lib.mkForce "*";
 
         # environment.systemPackages = with pkgs; [
         #   libgnome-keyring
@@ -244,7 +293,7 @@ in
         # Sway-specific home-manager config
         home-manager.users.ziad = lib.mkForce ./home-sway.nix;
 
-        environment.systemPackages = commonPackages;
+        environment.systemPackages = commonPackages ++ [ pkgs.polkit_gnome ];
       };
     };
   };
@@ -315,6 +364,9 @@ in
   programs.virt-manager.enable = true;
   users.groups.libvirtd.members = [ "ziad" ];
   virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd.extraConfig = ''
+    display = "gtk,gl=on"
+  '';
   virtualisation.spiceUSBRedirection.enable = true;
   systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
 
@@ -329,10 +381,6 @@ in
   ];
 
   nix.nixPath = [
-    "nixos=${sources.nixpkgs}"
-    "nixpkgs=${sources.nixpkgs}"
-    "home-manager=${sources.home-manager}"
-    "nixos-hardware=${sources.nixos-hardware}"
     "nixos-config=/home/ziad/nixos/default.nix"
   ];
   system.stateVersion = "25.11";

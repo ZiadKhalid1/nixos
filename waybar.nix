@@ -1,6 +1,7 @@
 {
   next-prayer,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -32,6 +33,7 @@
           "custom/audio_idle_inhibitor"
           "idle_inhibitor"
           "backlight"
+          "custom/hdmi-backlight"
           "custom/pomo"
           "battery"
           "pulseaudio"
@@ -199,6 +201,18 @@
             none = "";
           };
         };
+
+        "custom/hdmi-backlight" =
+          let
+            ddcutil = lib.getExe pkgs.ddcutil;
+          in
+          {
+            format = " monitor {}";
+            exec = ''${ddcutil} getvcp 10 | sed 's/.*current value = \s\+\([0-9]\+\).*/\1/' '';
+            interval = 1;
+            on-scroll-down = "${ddcutil} setvcp 10 - 5";
+            on-scroll-up = "${ddcutil} setvcp 10 + 5";
+          };
 
         "backlight" = {
           format = "{icon}&#8239;{percent}%";

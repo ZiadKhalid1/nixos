@@ -45,6 +45,8 @@ in
       no_focus [title="Picture-in-Picture"]
       no_focus [title="Update Available"]
       for_window [app_id="firefox" title="^Picture-in-Picture$"] sticky enable
+      bindgesture swipe:3:right workspace prev_on_output
+      bindgesture swipe:3:left workspace next_on_output
       for_window [app_id="pavucontrol"] {
         sticky enable
         resize set width 50ppt height 50ppt
@@ -86,7 +88,7 @@ in
         "${modifier}+Ctrl+8" = "move container to workspace number 8; workspace number 8";
         "${modifier}+Ctrl+9" = "move container to workspace number 9; workspace number 9";
         "${modifier}+s" =
-          ''exec ${grim} -g "$(${slurp})" - | ${wl-copy} && ${notify-send} "Screenshot copied"'';
+          ''exec ${grim} -g "$(${slurp})" - | ${wl-copy} && ${notify-send} "Screenshot copied" && $?'';
         "${modifier}+print" =
           ''exec IMG=~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png && ${grim} $IMG && ${wl-copy} < $IMG && ${notify-send} "Screenshot saved"'';
         "${modifier}+g" =
@@ -194,6 +196,23 @@ in
         { command = "${pkgs.swayest-workstyle}/bin/sworkstyle &> /tmp/sworkstyle.log"; }
         { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
       ];
+    };
+  };
+
+  systemd.user.services.polkit-gnome-authentication-agent-1 = {
+    Unit = {
+      Description = "polkit-gnome-authentication-agent-1";
+      After = [ "graphical-session.target" ];
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
     };
   };
 
