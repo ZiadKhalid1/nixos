@@ -95,6 +95,7 @@ in
           ''exec IMG=~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png && ${grim} -g "$(slurp)" $IMG && ${wl-copy} < $IMG && ${notify-send} "Screenshot saved"'';
         "${modifier}+o" =
           ''exec ${grim} -g "$(${slurp})" - | ${pkgs.tesseract}/bin/tesseract - - | ${wl-copy} && ${notify-send} -- "$(${pkgs.wl-clipboard}/bin/wl-paste)"'';
+        "${modifier}+n" = "${pkgs.wayscriber}/bin/wayscriber --active";
       };
       input = {
         "*" = {
@@ -194,7 +195,10 @@ in
           always = true;
         }
         { command = "${pkgs.swayest-workstyle}/bin/sworkstyle &> /tmp/sworkstyle.log"; }
-        { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
+        {
+          command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";
+          always = true;
+        }
       ];
     };
   };

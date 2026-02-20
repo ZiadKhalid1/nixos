@@ -36,6 +36,7 @@ in
   };
 
   home.packages = with pkgs; [
+    opencode
     codeblocksFull
     snapper-gui
     standardnotes
@@ -221,6 +222,7 @@ in
         pkgs.nil
         pkgs.nixd
         pkgs.nixfmt-rfc-style
+        pkgs.clang-tools
       ];
     };
   };

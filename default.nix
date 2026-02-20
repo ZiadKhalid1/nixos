@@ -25,7 +25,7 @@ let
     overlays = [
       (import ./pkgs/overlay.nix)
       (self: super: {
-         mcp-nixos = if super ? mcp-nixos then super.mcp-nixos else rolling.mcp-nixos;
+        mcp-nixos = if super ? mcp-nixos then super.mcp-nixos else rolling.mcp-nixos;
       })
     ];
   };
@@ -353,6 +353,7 @@ in
     light.enable = true;
     dconf.enable = true;
     xfconf.enable = true;
+    droidcam.enable = true;
   };
 
   # __     ___      _               _ _           _   _
