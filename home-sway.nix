@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -34,17 +35,9 @@
   programs.foot = {
     enable = true;
     settings = {
-      main = {
-        font = "JetBrains Mono:size=16";
-      };
       colors = {
-        alpha = 0.5;
+        alpha = lib.mkForce 0.5;
       };
     };
-  };
-
-  # Sway-specific catppuccin settings
-  catppuccin = {
-    swaync.font = "FiraCodeNerd";
   };
 }

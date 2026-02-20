@@ -1,13 +1,6 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 let
-  catppuccinColors = {
-    base = "#1e1e2e";
-    text = "#cdd6f4";
-    rosewater = "#f5e0dc";
-    lavender = "#b4befe";
-    overlay0 = "#6c7086";
-    peach = "#fab387";
-  };
+  stylixColors = config.lib.stylix.colors.withHashtag;
   pactl = lib.getExe' pkgs.pulseaudio "pactl";
   grim = lib.getExe pkgs.grim;
   slurp = lib.getExe pkgs.slurp;
@@ -139,41 +132,41 @@ in
       workspaceAutoBackAndForth = true;
       menu = "rofi -show-icons -show drun";
       colors = {
-        background = catppuccinColors.base;
+        background = lib.mkForce stylixColors.base00;
         focused = {
-          childBorder = catppuccinColors.lavender;
-          background = catppuccinColors.base;
-          text = catppuccinColors.text;
-          indicator = catppuccinColors.rosewater;
-          border = catppuccinColors.lavender;
+          childBorder = lib.mkForce stylixColors.base07;
+          background = lib.mkForce stylixColors.base00;
+          text = lib.mkForce stylixColors.base05;
+          indicator = lib.mkForce stylixColors.base06;
+          border = lib.mkForce stylixColors.base07;
         };
         focusedInactive = {
-          childBorder = catppuccinColors.overlay0;
-          background = catppuccinColors.base;
-          text = catppuccinColors.text;
-          indicator = catppuccinColors.rosewater;
-          border = catppuccinColors.overlay0;
+          childBorder = lib.mkForce stylixColors.base04;
+          background = lib.mkForce stylixColors.base00;
+          text = lib.mkForce stylixColors.base05;
+          indicator = lib.mkForce stylixColors.base06;
+          border = lib.mkForce stylixColors.base04;
         };
         unfocused = {
-          childBorder = catppuccinColors.overlay0;
-          background = catppuccinColors.base;
-          text = catppuccinColors.text;
-          indicator = catppuccinColors.rosewater;
-          border = catppuccinColors.overlay0;
+          childBorder = lib.mkForce stylixColors.base04;
+          background = lib.mkForce stylixColors.base00;
+          text = lib.mkForce stylixColors.base05;
+          indicator = lib.mkForce stylixColors.base06;
+          border = lib.mkForce stylixColors.base04;
         };
         placeholder = {
-          childBorder = catppuccinColors.overlay0;
-          background = catppuccinColors.base;
-          text = catppuccinColors.text;
-          indicator = catppuccinColors.overlay0;
-          border = catppuccinColors.overlay0;
+          childBorder = lib.mkForce stylixColors.base04;
+          background = lib.mkForce stylixColors.base00;
+          text = lib.mkForce stylixColors.base05;
+          indicator = lib.mkForce stylixColors.base04;
+          border = lib.mkForce stylixColors.base04;
         };
         urgent = {
-          childBorder = catppuccinColors.peach;
-          background = catppuccinColors.base;
-          text = catppuccinColors.peach;
-          indicator = catppuccinColors.overlay0;
-          border = catppuccinColors.peach;
+          childBorder = lib.mkForce stylixColors.base09;
+          background = lib.mkForce stylixColors.base00;
+          text = lib.mkForce stylixColors.base09;
+          indicator = lib.mkForce stylixColors.base04;
+          border = lib.mkForce stylixColors.base09;
         };
       };
       startup = [
@@ -185,10 +178,6 @@ in
         { command = "systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP &"; }
         {
           command = "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
-        }
-        {
-          command = "${lib.getExe pkgs.swaybg} -i ${builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png"} -m fill";
-          always = true;
         }
         {
           command = "${pkgs.brightnessctl}/bin/brightnessctl set 45%";

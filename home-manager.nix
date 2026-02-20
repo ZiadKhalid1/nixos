@@ -1,6 +1,5 @@
 {
   pkgs,
-  catppuccin,
   rolling,
   lib,
   ...
@@ -18,10 +17,6 @@ let
 in
 
 {
-  imports = [
-    "${catppuccin}/modules/home-manager"
-  ];
-
   xdg.desktopEntries.signal-desktop = {
     name = "Signal";
     exec = "signal-desktop";
@@ -241,29 +236,15 @@ in
     enable = true;
   };
 
-  catppuccin = {
-    flavor = "mocha";
-    enable = true;
-    helix.useItalics = true;
-    accent = "blue";
-    cursors = {
-      enable = true;
-      accent = "dark";
-    };
-    gtk = {
-      icon.enable = true;
-    };
-  };
   gtk = {
     enable = true;
-    theme = {
-      name = "catppuccin-mocha-blue-standard";
-      package = pkgs.catppuccin-gtk.override {
-        variant = "mocha";
-        accents = [ "blue" ];
-      };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
     };
   };
+
+  stylix.targets.firefox.enable = false;
 
   xdg = {
     enable = true;

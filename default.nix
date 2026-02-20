@@ -29,8 +29,7 @@ let
       })
     ];
   };
-  # catppuccin = sources.catppuccin;
-  catppuccin = builtins.fetchTarball "https://github.com/catppuccin/nix/archive/release-25.05.tar.gz";
+  stylix = builtins.fetchTarball "https://github.com/nix-community/stylix/archive/release-25.11.tar.gz";
   # rolling = import sources.rolling-pkgs { };
   rolling = import <nixos-unstable> { config.allowUnfree = true; };
   commonPackages = with pkgs; [
@@ -44,8 +43,7 @@ let
     libreoffice-fresh
     file
     qemu
-    catppuccin-papirus-folders
-    magnetic-catppuccin-gtk
+    papirus-icon-theme
     fzf
     file-roller
     (octave.withPackages (
@@ -65,7 +63,59 @@ in
     ./hardware-configuration.nix
     <home-manager/nixos>
     <nixos-hardware/asus/battery.nix>
+    (import stylix).nixosModules.stylix
   ];
+
+  stylix = {
+    enable = true;
+    polarity = "dark";
+    image = builtins.fetchurl "https://raw.githubusercontent.com/zhichaoh/catppuccin-wallpapers/refs/heads/main/os/nix-black-4k.png";
+    base16Scheme = {
+      base00 = "1e1e2e"; # base
+      base01 = "181825"; # mantle
+      base02 = "313244"; # surface0
+      base03 = "45475a"; # surface1
+      base04 = "585b70"; # surface2
+      base05 = "cdd6f4"; # text
+      base06 = "f5e0dc"; # rosewater
+      base07 = "b4befe"; # lavender
+      base08 = "f38ba8"; # red
+      base09 = "fab387"; # peach
+      base0A = "f9e2af"; # yellow
+      base0B = "a6e3a1"; # green
+      base0C = "94e2d5"; # teal
+      base0D = "89b4fa"; # blue
+      base0E = "cba6f7"; # mauve
+      base0F = "f2cdcd"; # flamingo
+    };
+    fonts = {
+      monospace = {
+        package = pkgs.nerd-fonts.fira-code;
+        name = "FiraCode Nerd Font";
+      };
+      sansSerif = {
+        package = pkgs.cantarell-fonts;
+        name = "Cantarell";
+      };
+      serif = {
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Serif";
+      };
+      emoji = {
+        package = pkgs.noto-fonts-color-emoji;
+        name = "Noto Color Emoji";
+      };
+      sizes = {
+        terminal = 16;
+        applications = 12;
+      };
+    };
+    cursor = {
+      package = pkgs.catppuccin-cursors.mochaDark;
+      name = "catppuccin-mocha-dark-cursors";
+      size = 24;
+    };
+  };
 
   virtualisation.docker = {
     enable = true;
@@ -309,7 +359,6 @@ in
   home-manager.backupFileExtension = "bak";
   home-manager.users.ziad = ./home-manager.nix;
   home-manager.extraSpecialArgs = {
-    inherit catppuccin;
     inherit rolling;
     inherit pkgs;
     next-prayer = pkgs.next-prayer;
@@ -331,6 +380,9 @@ in
     fira-mono
     nerd-fonts.fira-code
     jetbrains-mono
+    noto-fonts
+    noto-fonts-color-emoji
+    dejavu_fonts
   ];
 
   #  ____

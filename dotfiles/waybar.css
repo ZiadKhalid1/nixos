@@ -1,7 +1,7 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
     color: @text;
-    font-family: FiraCodeNerd, CascadiaCode;
+    font-family: FiraCodeNerd, CascadiaCode,FontAwesome,sans-serif ;
     font-size: 15px;
 }
 
@@ -45,6 +45,8 @@ window#waybar {
     background-color: rgba(49, 50, 68, 0.6);
     color: #a6adc8;
     border-radius: 16px;
+    font-size: 18px;
+    min-width: 30px;
     transition:
         background-color 0.3s ease,
         color 0.3s ease;
