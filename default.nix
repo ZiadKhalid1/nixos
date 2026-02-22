@@ -374,11 +374,14 @@ in
   environment.systemPackages = commonPackages ++ gnomePackages;
 
   fonts.packages = with pkgs; [
+    inter
     cascadia-code
     font-awesome
     fira-code
     fira-mono
     nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.hack
     jetbrains-mono
     noto-fonts
     noto-fonts-color-emoji

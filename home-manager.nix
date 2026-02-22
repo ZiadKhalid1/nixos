@@ -2,6 +2,7 @@
   pkgs,
   rolling,
   lib,
+  config,
   ...
 }:
 let
@@ -125,7 +126,82 @@ in
     claude-code.enable = true;
     lazygit.enable = true;
     bat.enable = true;
-    rofi.enable = true;
+    rofi = {
+      enable = true;
+      package = pkgs.rofi;
+      font = lib.mkForce "Inter 14";
+      terminal = "${pkgs.foot}/bin/foot";
+      location = "center";
+      extraConfig = {
+        show-icons = true;
+        icon-theme = "Papirus-Dark";
+        display-drun = " Apps";
+        display-window = " Windows";
+        display-clipboard = " Clipboard";
+        drun-display-format = "{name}";
+        hover-select = true;
+        me-select-entry = "";
+        me-accept-entry = "MousePrimary";
+        kb-cancel = "Escape,Super+v";
+      };
+      theme =
+        let
+          inherit (config.lib.formats.rasi) mkLiteral;
+        in
+        {
+          "*" = {
+            border-radius = mkLiteral "12px";
+          };
+          window = {
+            width = mkLiteral "680px";
+            padding = mkLiteral "0px";
+            border = mkLiteral "2px solid";
+            border-radius = mkLiteral "16px";
+          };
+          mainbox = {
+            padding = mkLiteral "12px";
+            spacing = mkLiteral "12px";
+          };
+          inputbar = {
+            padding = mkLiteral "10px 16px";
+            spacing = mkLiteral "10px";
+            border-radius = mkLiteral "10px";
+            children = map mkLiteral [ "icon-search" "entry" ];
+          };
+          "icon-search" = {
+            expand = false;
+            filename = "search";
+            size = mkLiteral "20px";
+            vertical-align = mkLiteral "0.5";
+          };
+          entry = {
+            placeholder = "Search...";
+            placeholder-color = mkLiteral "inherit";
+          };
+          listbox = {
+            spacing = mkLiteral "8px";
+          };
+          listview = {
+            lines = 8;
+            columns = 1;
+            fixed-height = true;
+            spacing = mkLiteral "4px";
+            scrollbar = false;
+          };
+          element = {
+            padding = mkLiteral "8px 14px";
+            spacing = mkLiteral "12px";
+            border-radius = mkLiteral "10px";
+          };
+          "element-icon" = {
+            size = mkLiteral "28px";
+            vertical-align = mkLiteral "0.5";
+          };
+          "element-text" = {
+            vertical-align = mkLiteral "0.5";
+          };
+        };
+    };
     mpv.enable = true;
     direnv = {
       enable = true;
@@ -197,10 +273,20 @@ in
       enable = true;
       package = pkgs.zed-editor-fhs;
       extensions = [
+        "catppuccin"
         "nix"
         "toml"
       ];
       userSettings = {
+        theme = {
+          mode = "dark";
+          dark = "Catppuccin Mocha";
+          light = "Catppuccin Mocha";
+        };
+        buffer_font_family = "JetBrains Mono";
+        buffer_font_size = 16;
+        ui_font_family = "JetBrains Mono";
+        ui_font_size = 16;
         auto-update = false;
         vim_mode = true;
         languages = {
@@ -245,6 +331,8 @@ in
   };
 
   stylix.targets.firefox.enable = false;
+  stylix.targets.zed.enable = false;
+  # stylix.targets.waybar.enable = false;
 
   xdg = {
     enable = true;

@@ -207,7 +207,7 @@
             ddcutil = lib.getExe pkgs.ddcutil;
           in
           {
-            format = " monitor {}";
+            format = " monitor {}";
             exec = ''${ddcutil} getvcp 10 | sed 's/.*current value = \s\+\([0-9]\+\).*/\1/' '';
             interval = 1;
             on-scroll-down = "${ddcutil} setvcp 10 - 5";

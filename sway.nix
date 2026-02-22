@@ -89,6 +89,7 @@ in
         "${modifier}+o" =
           ''exec ${grim} -g "$(${slurp})" - | ${pkgs.tesseract}/bin/tesseract - - | ${wl-copy} && ${notify-send} -- "$(${pkgs.wl-clipboard}/bin/wl-paste)"'';
         "${modifier}+n" = "${pkgs.wayscriber}/bin/wayscriber --active";
+        "${modifier}+v" = "exec cliphist list | rofi -dmenu -p '  Clipboard' | cliphist decode | ${wl-copy}";
       };
       input = {
         "*" = {
@@ -130,7 +131,7 @@ in
         }
       ];
       workspaceAutoBackAndForth = true;
-      menu = "rofi -show-icons -show drun";
+      menu = "rofi -show drun";
       colors = {
         background = lib.mkForce stylixColors.base00;
         focused = {
@@ -212,6 +213,7 @@ in
   services.swaync = {
     enable = true;
     settings = builtins.fromJSON (builtins.readFile ./dotfiles/swaync-config.json);
+    style = builtins.readFile ./dotfiles/swaync-style.css;
   };
 
   services.swayidle = {

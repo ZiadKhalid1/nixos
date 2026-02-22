@@ -22,7 +22,6 @@
   ];
 
   xdg.mimeApps.defaultApplications."x-scheme-handler/mailto" = "thunderbird.desktop";
-  programs.rofi.enable = true;
 
   services.gnome-keyring.enable = true;
   # Sway-specific services
