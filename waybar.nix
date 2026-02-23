@@ -10,10 +10,13 @@
     systemd.enable = true;
     settings = {
       mainBar = {
+        layer = "top";
         position = "top";
         spacing = 10;
-        height = 39;
-        width = 1895;
+        height = 38;
+        margin-top = 6;
+        margin-left = 10;
+        margin-right = 10;
 
         modules-left = [
           "sway/workspaces"
@@ -68,7 +71,7 @@
             critical = 90;
           };
           interval = 1;
-          format = "󰻠 {usage:2}%";
+          format = "󰻠 {usage}%";
           on-click = "${pkgs.foot}/bin/foot ${pkgs.bottom}/bin/btm";
         };
 
@@ -95,17 +98,17 @@
         };
 
         "network" = {
-          format-wifi = "󰖩 &#8239;({signalStrength}%)";
-          format-ethernet = "&#8239;{ifname}: {ipaddr}/{cidr}";
-          format-linked = "&#8239;{ifname} (No IP)";
-          format-disconnected = "✈ &#8239;Disconnected";
+          format-wifi = "󰖩 {signalStrength}%";
+          format-ethernet = "󰈀 {ifname}";
+          format-linked = "󰈀 {ifname} (No IP)";
+          format-disconnected = "󰖪 Disconnected";
           format-alt = "{ifname}: {ipaddr}/{cidr}";
           tooltip-format = "{essid}: {ipaddr}";
         };
 
         "tray" = {
-          spacing = 10;
-          icon-size = 15;
+          spacing = 8;
+          icon-size = 16;
         };
 
         "clock" = {
@@ -207,7 +210,7 @@
             ddcutil = lib.getExe pkgs.ddcutil;
           in
           {
-            format = " monitor {}";
+            format = "󰍹 {}";
             exec = ''${ddcutil} getvcp 10 | sed 's/.*current value = \s\+\([0-9]\+\).*/\1/' '';
             interval = 1;
             on-scroll-down = "${ddcutil} setvcp 10 - 5";
@@ -215,7 +218,7 @@
           };
 
         "backlight" = {
-          format = "{icon}&#8239;{percent}%";
+          format = "{icon} {percent}%";
           format-icons = [
             "🔅"
             "🔆"

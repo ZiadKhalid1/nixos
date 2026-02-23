@@ -166,7 +166,10 @@ in
             padding = mkLiteral "10px 16px";
             spacing = mkLiteral "10px";
             border-radius = mkLiteral "10px";
-            children = map mkLiteral [ "icon-search" "entry" ];
+            children = map mkLiteral [
+              "icon-search"
+              "entry"
+            ];
           };
           "icon-search" = {
             expand = false;
@@ -240,6 +243,7 @@ in
       extraPackages = [
         pkgs.nil
         pkgs.nixd
+        pkgs.clang-tools
       ];
       languages = {
         language = [
@@ -328,11 +332,26 @@ in
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+    };
   };
 
+  stylix.targets.gtk.extraCss = ''
+    /* Remove Stylix/GTK focus borders globally */
+    *:focus, *:active, *:checked {
+      outline: none;
+      outline-width: 0;
+      outline-offset: 0;
+      -gtk-outline-radius: 0;
+    }
+  '';
   stylix.targets.firefox.enable = false;
   stylix.targets.zed.enable = false;
-  # stylix.targets.waybar.enable = false;
+  stylix.targets.waybar.enable = false;
 
   xdg = {
     enable = true;

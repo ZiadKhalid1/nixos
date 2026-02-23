@@ -36,6 +36,7 @@
     settings = {
       colors = {
         alpha = lib.mkForce 0.5;
+        alpha-mode = "matching";
       };
     };
   };

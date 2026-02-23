@@ -22,6 +22,8 @@
     font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
     font-weight: 500;
     font-size: 14px;
+    outline: none;
+    -gtk-outline-radius: 0;
 }
 
 /* ── Control Center ──────────────────────────────── */
@@ -41,16 +43,18 @@
 }
 
 .notification {
-    background: transparent;
+    background: @surface0;
     border: none;
     border-radius: 12px;
     padding: 0;
     margin: 4px 0;
     color: @text;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .notification-content {
-    padding: 6px 4px;
+    background: transparent;
+    padding: 12px;
     margin: 0;
 }
 
@@ -97,8 +101,8 @@
 }
 
 .control-center .notification-default-action {
-    background: @surface0;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: transparent;
+    border: none;
     border-radius: 12px;
     padding: 12px 14px;
 }
@@ -139,10 +143,10 @@
 
 /* notification default action (click body) */
 .notification-default-action {
-    background: @surface0;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: transparent;
+    border: none;
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 0;
     margin: 0;
 }
 

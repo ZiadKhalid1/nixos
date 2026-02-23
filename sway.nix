@@ -19,8 +19,7 @@ in
       corner_radius 10
       smart_corner_radius enable
       blur disable
-      blur_passes 5
-      blur_xray disable
+
       shadows on
       shadow_blur_radius 10
       default_dim_inactive 0.1
