@@ -55,76 +55,74 @@ self: super: {
   # ═══════════════════════════════════════════════════════════════════════════
   # Find Unicode - Unicode character search tool
   # ═══════════════════════════════════════════════════════════════════════════
-  find_unicode = self.rustPlatform.buildRustPackage rec {
-    pname = "find_unicode";
-    version = "0.4.0";
-
-    src = self.fetchFromGitHub {
-      owner = "pierrechevalier83";
-      repo = "find_unicode";
-      rev = "3afc33a7056f6fadd3e1d1d216d89a2f78e3ed67";
-      sha256 = "sha256-hfTOUrFSlqOEzh2X3SnRx4UkmgCNDDfOjUT9325XSP8=";
-    };
-
-    cargoHash = "sha256-b+fRwdEI97Cljlz6r4sukPvkb9/x6UBKEhUDmLONh2w=";
-
-    cargoBuildFlags = [ "--bins" ];
-
-    # Let buildRustPackage handle installation automatically
-  };
+  find_unicode = self.callPackage ./fu.nix { };
 
   # ═══════════════════════════════════════════════════════════════════════════
   # Git Helper - AI-powered git commit message generator
   # ═══════════════════════════════════════════════════════════════════════════
-  git-helper = let
-    inherit (self) lib stdenv makeWrapper bash curl jq openssl netcat git xdg-utils coreutils;
-  in stdenv.mkDerivation rec {
-    pname = "git-helper";
-    version = "1.0.0";
+  git-helper =
+    let
+      inherit (self)
+        lib
+        stdenv
+        makeWrapper
+        bash
+        curl
+        jq
+        openssl
+        netcat
+        git
+        xdg-utils
+        coreutils
+        ;
+    in
+    stdenv.mkDerivation rec {
+      pname = "git-helper";
+      version = "1.0.0";
 
-    src = ../scripts/git-helper.sh;
+      src = ../scripts/git-helper.sh;
 
-    unpackPhase = ''
-      cp $src git-helper.sh
-    '';
-
-    nativeBuildInputs = [ makeWrapper ];
-
-    buildInputs = [
-      bash
-      curl
-      jq
-      openssl
-      netcat
-      git
-      xdg-utils
-      coreutils
-    ];
-
-    installPhase = ''
-      runHook preInstall
-
-      mkdir -p $out/bin
-      cp git-helper.sh $out/bin/git-helper
-      chmod +x $out/bin/git-helper
-
-      wrapProgram $out/bin/git-helper \
-        --prefix PATH : ${lib.makeBinPath buildInputs}
-
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "AI-powered git commit message generator using OpenRouter";
-      longDescription = ''
-        A bash script that uses OpenRouter's API to generate conventional commit
-        messages based on staged git changes. Supports OAuth PKCE flow for
-        authentication and caches API keys locally.
+      unpackPhase = ''
+        cp $src git-helper.sh
       '';
-      maintainers = [ ];
-      platforms = platforms.unix;
+
+      nativeBuildInputs = [ makeWrapper ];
+
+      buildInputs = [
+        bash
+        curl
+        jq
+        openssl
+        netcat
+        git
+        xdg-utils
+        coreutils
+      ];
+
+      installPhase = ''
+        runHook preInstall
+
+        mkdir -p $out/bin
+        cp git-helper.sh $out/bin/git-helper
+        chmod +x $out/bin/git-helper
+
+        wrapProgram $out/bin/git-helper \
+          --prefix PATH : ${lib.makeBinPath buildInputs}
+
+        runHook postInstall
+      '';
+
+      meta = with lib; {
+        description = "AI-powered git commit message generator using OpenRouter";
+        longDescription = ''
+          A bash script that uses OpenRouter's API to generate conventional commit
+          messages based on staged git changes. Supports OAuth PKCE flow for
+          authentication and caches API keys locally.
+        '';
+        maintainers = [ ];
+        platforms = platforms.unix;
+      };
     };
-  };
 
   # ═══════════════════════════════════════════════════════════════════════════
   # Pomodoro CLI - Pomodoro timer CLI
@@ -148,37 +146,39 @@ self: super: {
   # ═══════════════════════════════════════════════════════════════════════════
   # Quran Companion - Desktop Quran reader and player
   # ═══════════════════════════════════════════════════════════════════════════
-  quran-companion = let
-    inherit (self) lib appimageTools fetchurl;
-    version = "1.3.3";
-    pname = "quran-companion";
+  quran-companion =
+    let
+      inherit (self) lib appimageTools fetchurl;
+      version = "1.3.3";
+      pname = "quran-companion";
 
-    src = fetchurl {
-      url = "https://github.com/0xzer0x/quran-companion/releases/download/v${version}/Quran_Companion-${version}-x86_64.AppImage";
-      hash = "sha256-XdtI941h1dfLJ8iGl2nJuiIM8zHTdH6aot+Oba6T6xo=";
-    };
-    appimageContents = appimageTools.extract {
+      src = fetchurl {
+        url = "https://github.com/0xzer0x/quran-companion/releases/download/v${version}/Quran_Companion-${version}-x86_64.AppImage";
+        hash = "sha256-XdtI941h1dfLJ8iGl2nJuiIM8zHTdH6aot+Oba6T6xo=";
+      };
+      appimageContents = appimageTools.extract {
+        inherit pname version src;
+      };
+    in
+    appimageTools.wrapType2 rec {
       inherit pname version src;
-    };
-  in appimageTools.wrapType2 rec {
-    inherit pname version src;
-    extraPkgs = pkgs: with pkgs; [ zstd ];
+      extraPkgs = pkgs: with pkgs; [ zstd ];
 
-    extraInstallCommands = ''
-      mkdir -p $out/share/applications
-      mkdir -p $out/share/icons/hicolor/256x256/apps
-      cp ${appimageContents}/io.github._0xzer0x.qurancompanion.png $out/share/icons/hicolor/256x256/apps/quran-companion.png
-      cp ${appimageContents}/usr/share/applications/io.github._0xzer0x.qurancompanion.desktop $out/share/applications/${pname}.desktop
-      substituteInPlace $out/share/applications/${pname}.desktop \
-        --replace-quiet 'Icon=io.github._0xzer0x.qurancompanion' 'Icon=quran-companion'
-    '';
+      extraInstallCommands = ''
+        mkdir -p $out/share/applications
+        mkdir -p $out/share/icons/hicolor/256x256/apps
+        cp ${appimageContents}/io.github._0xzer0x.qurancompanion.png $out/share/icons/hicolor/256x256/apps/quran-companion.png
+        cp ${appimageContents}/usr/share/applications/io.github._0xzer0x.qurancompanion.desktop $out/share/applications/${pname}.desktop
+        substituteInPlace $out/share/applications/${pname}.desktop \
+          --replace-quiet 'Icon=io.github._0xzer0x.qurancompanion' 'Icon=quran-companion'
+      '';
 
-    meta = {
-      description = "Free and open-source desktop Quran reader and player";
-      homepage = "https://github.com/0xzer0x/quran-companion";
-      sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
-      platforms = [ "x86_64-linux" ];
-      mainProgram = pname;
+      meta = {
+        description = "Free and open-source desktop Quran reader and player";
+        homepage = "https://github.com/0xzer0x/quran-companion";
+        sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
+        platforms = [ "x86_64-linux" ];
+        mainProgram = pname;
+      };
     };
-  };
 }
