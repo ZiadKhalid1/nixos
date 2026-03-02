@@ -3,3 +3,4 @@
 .git
 .aider*
 **/result
+.gemini/settings.json
