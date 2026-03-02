@@ -166,7 +166,11 @@ self: super: {
 
     extraInstallCommands = ''
       mkdir -p $out/share/applications
+      mkdir -p $out/share/icons/hicolor/256x256/apps
+      cp ${appimageContents}/io.github._0xzer0x.qurancompanion.png $out/share/icons/hicolor/256x256/apps/quran-companion.png
       cp ${appimageContents}/usr/share/applications/io.github._0xzer0x.qurancompanion.desktop $out/share/applications/${pname}.desktop
+      substituteInPlace $out/share/applications/${pname}.desktop \
+        --replace-quiet 'Icon=io.github._0xzer0x.qurancompanion' 'Icon=quran-companion'
     '';
 
     meta = {
