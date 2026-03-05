@@ -43,6 +43,9 @@
     options = [
       "rw"
       "uid=1000"
+      "gid=100"
+      "fmask=0022"
+      "dmask=0022"
     ];
   };
 

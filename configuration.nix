@@ -245,9 +245,15 @@ in
       pkgs.xdg-desktop-portal-gtk
     ];
     config = {
-      common.default = [ "gnome" "gtk" ];
+      common.default = [
+        "gnome"
+        "gtk"
+      ];
       gnome = {
-        default = [ "gnome" "gtk" ];
+        default = [
+          "gnome"
+          "gtk"
+        ];
         "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
       };
     };
@@ -292,11 +298,13 @@ in
   # ═══════════════════════════════════════════════════════════════════════════
   # System Packages
   # ═══════════════════════════════════════════════════════════════════════════
-  environment.systemPackages = commonPackages ++ (with pkgs; [
-    gnomeExtensions.athantimes
-    gnomeExtensions.user-themes
-    gnome-tweaks
-  ]);
+  environment.systemPackages =
+    commonPackages
+    ++ (with pkgs; [
+      gnomeExtensions.athantimes
+      gnomeExtensions.user-themes
+      gnome-tweaks
+    ]);
 
   # ═══════════════════════════════════════════════════════════════════════════
   # Fonts
@@ -342,18 +350,18 @@ in
       automatic = true;
       options = "--delete-older-than 30d";
     };
-    settings = {
-      trusted-users = [ "root" "ziad" ];
-      # Binary caches - add your cachix cache name here
-      substituters = [
-        "https://cache.nixos.org"
-        "https://ziad-nixos.cachix.org"  # Replace with your cache name
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        # Add your cachix public key here after running: cachix use ziad-nixos
-      ];
-    };
+    # settings = {
+    #   trusted-users = [ "root" "ziad" ];
+    #   # Binary caches - add your cachix cache name here
+    #   substituters = [
+    #     "https://cache.nixos.org"
+    #     "https://ziad-nixos.cachix.org"  # Replace with your cache name
+    #   ];
+    #   trusted-public-keys = [
+    #     "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    #     # Add your cachix public key here after running: cachix use ziad-nixos
+    #   ];
+    # };
     nixPath = [ "nixos-config=/home/ziad/nixos/configuration.nix" ];
   };
 
