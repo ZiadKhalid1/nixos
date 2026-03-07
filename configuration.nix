@@ -15,10 +15,6 @@
 # ╚═══════════════════════════════════════════════════════════════════════════╝
 
 let
-  # Pin to master branches to match nixpkgs-unstable
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-  stylix = builtins.fetchTarball "https://github.com/nix-community/stylix/archive/master.tar.gz";
-
   # Packages shared between GNOME and Sway
   commonPackages = with pkgs; [
     # System utilities
@@ -40,9 +36,9 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    "${home-manager}/nixos"
+    <home-manager/nixos>
     <nixos-hardware/asus/battery.nix>
-    (import stylix).nixosModules.stylix
+    (import <stylix>).nixosModules.stylix
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -362,7 +358,11 @@ in
     #     # Add your cachix public key here after running: cachix use ziad-nixos
     #   ];
     # };
-    nixPath = [ "nixos-config=/home/ziad/nixos/configuration.nix" ];
+    nixPath = [
+      "nixos-config=/home/ziad/nixos/configuration.nix"
+      "home-manager=/nix/var/nix/profiles/per-user/root/channels/home-manager"
+      "stylix=/nix/var/nix/profiles/per-user/root/channels/stylix"
+    ];
   };
 
   system.stateVersion = "25.11";

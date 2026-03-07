@@ -382,7 +382,8 @@ pkgs.writeShellScriptBin "pomodoro-cli" ''
       state=$(set_state_value "$state" "state" "Finished")
       write_state "$state"
       
-      echo "Time is up!"
+      # Output to stderr so it doesn't interfere with JSON output
+      echo "Time is up!" >&2
       
       if [[ "$notify" == "true" ]]; then
           if [[ -n "$message" && "$message" != "null" ]]; then
