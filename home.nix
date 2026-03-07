@@ -77,10 +77,16 @@ in
     git-helper
 
     # Utilities
+    winboat
     nix-search-tv
     gemini-cli
     jetbrains.clion
-    (pkgs.octaveFull.withPackages (opkgs: with opkgs; [ control signal ]))
+    (pkgs.octaveFull.withPackages (
+      opkgs: with opkgs; [
+        control
+        signal
+      ]
+    ))
 
   ];
 

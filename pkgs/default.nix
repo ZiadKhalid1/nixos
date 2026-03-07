@@ -127,21 +127,7 @@ self: super: {
   # ═══════════════════════════════════════════════════════════════════════════
   # Pomodoro CLI - Pomodoro timer CLI
   # ═══════════════════════════════════════════════════════════════════════════
-  pomodoro-cli = self.rustPlatform.buildRustPackage rec {
-    pname = "pomodoro-cli";
-    version = "1.2.5";
-
-    src = self.fetchurl {
-      url = "https://github.com/jkallio/pomodoro-cli/archive/refs/tags/v.${version}.tar.gz";
-      sha256 = "sha256-pubbQED/uoOk0EmkTAds8jK1F8ss1qtmDZ6MMWk2zIY=";
-    };
-
-    cargoHash = "sha256-hT4WPLOSiFEIivVJPa7RWFk9ZzNpaYmPHRdn/lIY43o=";
-
-    nativeBuildInputs = [ self.pkg-config ];
-    buildInputs = [ self.alsa-lib ];
-    doCheck = false;
-  };
+  pomodoro-cli = self.callPackage ./pomodoro-cli.nix { };
 
   # ═══════════════════════════════════════════════════════════════════════════
   # Quran Companion - Desktop Quran reader and player
