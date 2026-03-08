@@ -77,6 +77,7 @@ in
     git-helper
 
     # Utilities
+    firefoxpwa
     winboat
     nix-search-tv
     gemini-cli
@@ -135,10 +136,6 @@ in
   programs = {
     uv.enable = true;
     mcfly.enable = true;
-    chromium = {
-      enable = true;
-      package = pkgs.ungoogled-chromium;
-    };
     starship = {
       enable = true;
       settings = {
@@ -152,7 +149,11 @@ in
       };
     };
     nix-your-shell.enable = true;
-    firefox.enable = true;
+    firefox = {
+      enable = true;
+      package = pkgs.firefox;
+      nativeMessagingHosts = [ pkgs.firefoxpwa ];
+    };
     claude-code.enable = true;
     lazygit.enable = true;
     bat.enable = true;
